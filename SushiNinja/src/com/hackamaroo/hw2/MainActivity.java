@@ -14,9 +14,9 @@ import java.util.TimerTask;
 
 public class MainActivity extends Activity{
 
-	private long start;
-	private int ti;
-	private int Vy;
+	protected static long start;
+	protected static int ti;
+	protected static int Vy;
 	 
 	
 	@Override
@@ -65,7 +65,7 @@ public class MainActivity extends Activity{
 		//Set how long before to start calling the TimerTask (in milliseconds)
 		0,
 		//Set the amount of time between each execution (in milliseconds)
-		1000);
+		100);
 	}
 	
 	

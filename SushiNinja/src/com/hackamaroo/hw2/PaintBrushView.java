@@ -3,6 +3,7 @@ package com.hackamaroo.hw2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,6 +29,8 @@ public class PaintBrushView extends View implements OnTouchListener{
 	public ShapeDrawable circle = new ShapeDrawable(new OvalShape());
 	static int incX = 0; 
 	static int incY = 0; 
+	static int startY; 
+	static int startX;
 
 	public PaintBrushView(Context context) {
 		super(context);
@@ -45,18 +48,36 @@ public class PaintBrushView extends View implements OnTouchListener{
 	}
 	
 	protected void init(){
+		Random random = new Random();
+		
 		this.setOnTouchListener(this);
 		circle.getPaint().setColor(0xff74AC23);
 		//circle.setBounds(230, 220, 230+80, 220+80);
+		startY = random.nextInt(250)+225;
+		startX = random.nextInt(150)+250;
 	}
 	
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas){
+		Random random = new Random();
+		
 		Paint p = new Paint();
 		circle.draw(canvas);
 		//inc +=10; 
-		circle.setBounds(472+incY, 395+incX, 472+10+incY, 395+10+incX);
 		
+		// Increase the radious a bit
+		circle.setBounds(startY+incY, startX+incX, startY+25+incY, startX+25+incX);
+		
+		// Reset the coordinates of the new object if it goes off the screen
+		// Note: This is the same instance
+		if (startY+incY < 0 || startX+incX > 425 || startY+incY > 425 || startX+incX < 0) {
+			startY = random.nextInt(250)+225;
+			startX = random.nextInt(150)+250;
+			MainActivity.Vy = -25; // reset to default value
+			MainActivity.ti = 0; // reset time to zero
+			incX = 0; // reset everything
+			incY = 0; // reset everything
+		}
 
 		for(int i = 0; i < pdrawn.size(); i++){
 			Point pt = pdrawn.get(i);
@@ -76,6 +97,7 @@ public class PaintBrushView extends View implements OnTouchListener{
 	public void clearPoints(){
 		pdrawn = new ArrayList<Point>(); 
 	}
+	
 	
 	public boolean onTouch(View view, MotionEvent event){
 		if (event.getAction() == MotionEvent.ACTION_DOWN ) {

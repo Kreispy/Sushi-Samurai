@@ -1,0 +1,62 @@
+package com.hackamaroo.hw2;
+
+import java.util.*;
+
+public class Collision {
+	private int minDist; 
+	
+	public Collision(){
+		minDist = -1; 
+	}
+	
+	public boolean checkCollision(Point first, Point last, int xc, int yc, int rc){
+		//TO DO
+		List<Point> linePoints = new ArrayList<Point>();
+		int x0 = (int)first.getX();
+		int x1 = (int)last.getX(); 
+		int y0 = (int)first.getY(); 
+		int y1 = (int)last.getY(); 
+	    double deltax = x1 - x0;
+	    double deltay = y1 - y0;
+	    double error = 0;
+	    if (deltax -0 < 0.000000001){
+	    	deltax = 0.00000000001; 
+	    }
+	    double deltaerr = Math.abs(deltay / deltax);    // Assume deltax != 0 (line is not vertical),
+	           // note that this division needs to be done in a way that preserves the fractional part
+	    int y = y0;
+	    for (int x = x0; x <= x1; x++){
+	         linePoints.add(new Point(x, y, 0, 0, true)); // Default values for params
+	         error = error + deltaerr;
+	         if (error >= 0.5){ 
+	             y = y + 1;
+	             error = error - 1.0;
+	         }
+	    }
+	    // Calculate the minimum distance
+	    for (int i = 0; i < linePoints.size(); i++) {
+	    	int px = (int) linePoints.get(i).getX();
+    		int py = (int) linePoints.get(i).getY();
+	    	if (i == 0) {
+	    		minDist = distance(px, py, xc, yc);
+	    	}
+	    	else {
+	    		int temp = distance(px, py, xc, yc);
+	    		if (temp < minDist) {
+	    			minDist = temp;
+	    		}
+	    	}
+	    }
+	    
+		return (minDist <= rc);
+	}
+	
+	public int distance(int x1, int y1, int x2, int y2){
+		return ((int) Math.sqrt((x1-x2)*(x1-x2) + (y1 - y2)*(y1-y2)));
+	}
+	
+	public int getMinDist(){
+		return minDist; 
+	}
+	
+}
