@@ -17,7 +17,9 @@ public class MainActivity extends Activity{
 	protected static long start;
 	protected static int ti;
 	protected static int Vy;
-	 
+	static int dt; 
+	Timer t; 
+	TimerTask tt; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +28,18 @@ public class MainActivity extends Activity{
 		start = System.nanoTime(); 
 		
 		//Declare the timer
-		Timer t = new Timer();
+		t = new Timer();
 		//Set the schedule function and rate
 		int inc = 0; 
 		ti = 0;
 		Vy = -25;
+		dt = 225;
+		scheduleTT();  
 		
+	}
+	
+	public void scheduleTT(){
+		 
 		t.scheduleAtFixedRate(new TimerTask() {
 
 		    @Override
@@ -50,9 +58,10 @@ public class MainActivity extends Activity{
 		    	        //PaintBrushView.incY = -1*(Vy*ti + 1*ti*ti); 
 		    	        Vy += 1;
 		    	        ti += 1;
-		    	        Log.v("Vy = ", Integer.toString(Vy));
-		    	        Log.v("t = ", Integer.toString(ti));
-		    	        Log.v(Integer.toString(PaintBrushView.incX), Integer.toString(PaintBrushView.incY));		    	        
+		    	        //Log.v("Vy = ", Integer.toString(Vy));
+		    	        //Log.v("t = ", Integer.toString(ti));
+		    	        //Log.v(Integer.toString(PaintBrushView.incX), Integer.toString(PaintBrushView.incY));		    	        
+		    	        Log.v("dt", Integer.toString(dt));
 		    	        pbv.invalidate();
 		    	        
 		    	       
@@ -65,9 +74,8 @@ public class MainActivity extends Activity{
 		//Set how long before to start calling the TimerTask (in milliseconds)
 		0,
 		//Set the amount of time between each execution (in milliseconds)
-		100);
+		dt);
 	}
-	
 	
 	public void onClearButtonClick(View view){
 		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);

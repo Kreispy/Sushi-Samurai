@@ -33,6 +33,9 @@ public class PaletteView extends View implements OnTouchListener{
 	static long time; 
 	private long start; 
 	
+	private boolean incdt; 
+	private boolean decdt; 
+	
 	private Timer tt;
 	
 	public PaletteView(Context context) {
@@ -40,7 +43,9 @@ public class PaletteView extends View implements OnTouchListener{
 		init();
 		cont = context;
 		time = 0; 
-		start = System.nanoTime(); 
+		start = System.nanoTime();
+		incdt = false; 
+		decdt = false; 
 	}
 
 	public PaletteView(Context context, AttributeSet attrs) {
@@ -130,9 +135,11 @@ public class PaletteView extends View implements OnTouchListener{
 		
 		if(redS.getBounds().contains((int)x, (int)y)){
 			color = Color.RED; 
+			incdt = true; 
 		}
 		else if(blueS.getBounds().contains((int)x, (int)y)){
 			color = Color.BLUE; 
+			decdt = true; 
 		}
 		else if(whiteS.getBounds().contains((int)x, (int)y)){
 			color = Color.WHITE; 
@@ -153,6 +160,23 @@ public class PaletteView extends View implements OnTouchListener{
 		if(cont instanceof MainActivity){
 			MainActivity main = (MainActivity)cont; 
 			main.onPaletteClick(this);
+			if(incdt){
+				incdt = false; 
+				main.dt+=100; 
+				main.t.cancel(); 
+				main.t = new Timer();
+				main.scheduleTT();
+				//Log.v("dt", Integer.toString(main.dt));
+			}
+			else if (decdt){
+				decdt = false; 
+				if(main.dt >=101){
+					main.dt-=100;
+				}
+				main.t.cancel(); 
+				main.t = new Timer();
+				main.scheduleTT();
+			}
 		}
 		}
 		return true;
