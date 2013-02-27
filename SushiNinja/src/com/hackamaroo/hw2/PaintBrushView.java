@@ -31,6 +31,7 @@ public class PaintBrushView extends View implements OnTouchListener{
 	static int incY = 0; 
 	static int startY; 
 	static int startX;
+	Collision col = new Collision(); 
 
 	public PaintBrushView(Context context) {
 		super(context);
@@ -60,7 +61,14 @@ public class PaintBrushView extends View implements OnTouchListener{
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas){
 		Random random = new Random();
-		
+		boolean checkCollide = false; 
+		//Check for collisions
+		if(pdrawn.size() >=2){
+			//if(!pdrawn.get(pdrawn.size()-1).getFirst() && !pdrawn.get(pdrawn.size()-2).getFirst()){
+				checkCollide = col.checkCollision(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), startX+incX, startY+incY, 50);
+				Log.v("checkCollide", Boolean.toString(checkCollide));
+			//}
+		}
 		Paint p = new Paint();
 		circle.draw(canvas);
 		//inc +=10; 
@@ -70,13 +78,17 @@ public class PaintBrushView extends View implements OnTouchListener{
 		
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
-		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0) {
-			startY = random.nextInt(150)+(getWidth()/2); //800; //getHeight();
+		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 || checkCollide) {
+			startY = random.nextInt(150)+(getWidth()/2)-200; //800; //getHeight();
 			startX = getHeight();
+			Log.v("startx", Integer.toString(getWidth()));
+			Log.v("starty", Integer.toString(getHeight()));
 			MainActivity.Vy = -25; // reset to default value
-			MainActivity.ti = 0; // reset time to zero
+			MainActivity.ti = 1; // reset time to zero
 			incX = 0; // reset everything
 			incY = 0; // reset everything
+			checkCollide = false; 
+			pdrawn.clear();
 		}
 
 		for(int i = 0; i < pdrawn.size(); i++){
@@ -84,7 +96,7 @@ public class PaintBrushView extends View implements OnTouchListener{
 			p.setColor(pt.getColor());
 			canvas.drawCircle(pt.getX(),pt.getY(),pt.getSize(),p);
 			if(!pt.getFirst() && i != 0){
-				canvas.drawLine( pdrawn.get(i-1).getX(), pdrawn.get(i-1).getY(), pt.getX(), pt.getY(),p);
+				//canvas.drawLine( pdrawn.get(i-1).getX(), pdrawn.get(i-1).getY(), pt.getX(), pt.getY(),p);
 			}
 			else{
 				p.setStrokeWidth(pt.getSize()*2);

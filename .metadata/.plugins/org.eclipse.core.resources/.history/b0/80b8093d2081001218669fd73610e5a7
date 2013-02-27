@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff000000"
+    >
+<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/hello"
+    />
+<com.hackamaroo.hw2.PaintBrushView android:id="@+id/pbView"
+    android:layout_width="fill_parent" 
+    android:layout_height="500px"
+    />
+
+<LinearLayout 
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+	<com.hackamaroo.hw2.PaletteView  android:id="@+id/pView"
+	    android:layout_width="400px" 
+	    android:layout_height="wrap_content" 
+	    />
+
+    <Button 
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content"
+	    android:onClick="onClearButtonClick" 
+	    android:text="Clear"
+	    />
+    
+</LinearLayout>
+
+</LinearLayout>
