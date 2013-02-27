@@ -12,7 +12,7 @@
     />
 <com.hackamaroo.hw2.PaintBrushView android:id="@+id/pbView"
     android:layout_width="fill_parent" 
-    android:layout_height="400px"
+    android:layout_height="800px"
     />
 
 <LinearLayout 
@@ -22,10 +22,10 @@
     >
 
 	<com.hackamaroo.hw2.PaletteView  android:id="@+id/pView"
-	    android:layout_width="370px" 
+	    android:layout_width="600px" 
 	    android:layout_height="wrap_content" 
 	    />
-	    
+
     <Button 
 	    android:layout_width="wrap_content" 
 	    android:layout_height="wrap_content"

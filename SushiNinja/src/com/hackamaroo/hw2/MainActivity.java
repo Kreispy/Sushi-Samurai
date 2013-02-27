@@ -32,8 +32,8 @@ public class MainActivity extends Activity{
 		//Set the schedule function and rate
 		int inc = 0; 
 		ti = 0;
-		Vy = -25;
-		dt = 225;
+		Vy = -200;
+		dt = 200;
 		scheduleTT();  
 		
 	}
@@ -52,12 +52,11 @@ public class MainActivity extends Activity{
 		    	    @Override
 		    	    public void run() {
 		    	        PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
-		    	      
 		    	        PaintBrushView.incY -= Vx;
 		    	        PaintBrushView.incX += Vy; //+ 1*ti;
 		    	        //PaintBrushView.incY = -1*(Vy*ti + 1*ti*ti); 
 		    	        Vy += 1;
-		    	        ti += 1;
+		    	        ti += 5;
 		    	        //Log.v("Vy = ", Integer.toString(Vy));
 		    	        //Log.v("t = ", Integer.toString(ti));
 		    	        //Log.v(Integer.toString(PaintBrushView.incX), Integer.toString(PaintBrushView.incY));		    	        

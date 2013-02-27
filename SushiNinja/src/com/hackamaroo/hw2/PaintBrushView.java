@@ -22,7 +22,7 @@ import android.view.View.OnTouchListener;
 public class PaintBrushView extends View implements OnTouchListener{
 
 	protected int drawColor = Color.WHITE; 
-	protected int size = 6; 
+	protected int size = 7; 
 	public List<Point> pdrawn = new ArrayList<Point>();
 	public Stack<Point> asdf = new Stack<Point>(); 
 	public Path path;
@@ -53,8 +53,8 @@ public class PaintBrushView extends View implements OnTouchListener{
 		this.setOnTouchListener(this);
 		circle.getPaint().setColor(0xff74AC23);
 		//circle.setBounds(230, 220, 230+80, 220+80);
-		startY = random.nextInt(250)+225;
-		startX = random.nextInt(150)+250;
+		startY = random.nextInt(500)+(getWidth()/2); //getHeight()/2; 
+		startX = getHeight();
 	}
 	
 	@SuppressLint("DrawAllocation")
@@ -65,14 +65,14 @@ public class PaintBrushView extends View implements OnTouchListener{
 		circle.draw(canvas);
 		//inc +=10; 
 		
-		// Increase the radious a bit
-		circle.setBounds(startY+incY, startX+incX, startY+25+incY, startX+25+incX);
+		// Increase the radius a bit
+		circle.setBounds(startY+incY, startX+incX, startY+50+incY, startX+50+incX);
 		
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
-		if (startY+incY < 0 || startX+incX > 425 || startY+incY > 425 || startX+incX < 0) {
-			startY = random.nextInt(250)+225;
-			startX = random.nextInt(150)+250;
+		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0) {
+			startY = random.nextInt(150)+(getWidth()/2); //800; //getHeight();
+			startX = getHeight();
 			MainActivity.Vy = -25; // reset to default value
 			MainActivity.ti = 0; // reset time to zero
 			incX = 0; // reset everything
