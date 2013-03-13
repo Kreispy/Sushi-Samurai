@@ -4,9 +4,11 @@ import java.util.*;
 
 public class Collision {
 	private int minDist; 
+	private float distanceAY; 
 	
 	public Collision(){
 		minDist = -1; 
+		distanceAY = -1;
 	}
 	
 	public boolean checkCollision(Point first, Point last, int xc, int yc, int rc){
@@ -51,9 +53,21 @@ public class Collision {
 		return (minDist <= rc);
 	}
 	
+	public boolean checkCollisionAY(Point first, Point last, int xc, int yc, int rc){
+		float slope = (last.getY() - first.getY()) / (last.getX() - first.getX()); 
+		float b = last.getY() - slope * last.getX(); 
+		distanceAY = (float) (Math.abs(slope*xc - yc + b) / Math.sqrt(slope*slope + 1));
+		if (distanceAY <= rc){
+			return true; 
+		}
+		return false; 
+
+	}
+	
 	public int distance(int x1, int y1, int x2, int y2){
 		return ((int) Math.sqrt((x1-x2)*(x1-x2) + (y1 - y2)*(y1-y2)));
 	}
+	
 	
 	public int getMinDist(){
 		return minDist; 

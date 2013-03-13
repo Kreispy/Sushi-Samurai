@@ -52,8 +52,11 @@ public class MainActivity extends Activity{
 		    	    @Override
 		    	    public void run() {
 		    	        PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
-		    	        PaintBrushView.incY -= Vx;
+		    	        PaintBrushView.incY += Vy;
+		    	        PaintBrushView.incX -= Vx;
+		    	        /*PaintBrushView.incY -= Vx;
 		    	        PaintBrushView.incX += Vy; //+ 1*ti;
+		    	        */
 		    	        //PaintBrushView.incY = -1*(Vy*ti + 1*ti*ti); 
 		    	        Vy += 1;
 		    	        ti += 5;

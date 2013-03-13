@@ -1,0 +1,14 @@
+package com.hackamaroo.hw2;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class CollisionTest2 {
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}
