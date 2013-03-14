@@ -3,7 +3,6 @@ package com.hackamaroo.hw2;
 //import java.util.Timer;
 //import java.util.TimerTask;
 
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class MainActivity extends Activity{
 		int inc = 0; 
 		ti = 0;
 		Vy = -200;
-		dt = 200;
+		dt = 50;
 		scheduleTT();  
 		
 	}
@@ -87,10 +86,11 @@ public class MainActivity extends Activity{
 
 	public void onPaletteClick(View view){
 		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
+		/*
 		PaletteView pv = (PaletteView) findViewById(R.id.pView);
 		pbv.setColor(pv.getColor()); 
 		pbv.setSize(pv.getSize()); 
-		
+		*/
 	}
 
 

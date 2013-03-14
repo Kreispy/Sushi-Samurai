@@ -31,6 +31,9 @@ public class PaintBrushView extends View implements OnTouchListener{
 	static int incY = 0; 
 	static int startY; 
 	static int startX;
+	static int startVy = -25;
+	static int startVx;
+	static int startTi = 1;
 	Collision col = new Collision(); 
 	boolean checkCollide = false; 
 	boolean addPoint = false; 
@@ -83,12 +86,12 @@ public class PaintBrushView extends View implements OnTouchListener{
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
 		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 || checkCollide) {
-			startY = random.nextInt(150)+(getWidth()/2)-100; //800; //getHeight();
-			startX = getHeight();
+			startY = getHeight();//random.nextInt(150)+(getWidth()/2)-100; //800; //getHeight();
+			startX = random.nextInt(getWidth()/2) + random.nextInt(getWidth()/2);
 			Log.v("startx", Integer.toString(getWidth()));
 			Log.v("starty", Integer.toString(getHeight()));
-			MainActivity.Vy = -25; // reset to default value
-			MainActivity.ti = 1; // reset time to zero
+			MainActivity.Vy = -(getHeight()/30); // reset to default value
+			MainActivity.ti = startTi; // reset time to zero
 			incX = 0; // reset everything
 			incY = 0; // reset everything
 			checkCollide = false; 
