@@ -4,6 +4,14 @@
     <string name="app_name">Sushi Ninja</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="hello">First Iteration</string>
+    <string name="hello">Second Iteration</string>
+    <string name="slowvx">Slow Vx</string>
+	<string name="fastvx">Fast Vx</string>
+	<string name="slowvy">Slow Vy</string>
+	<string name="fastvy">Fast Vy</string>
+	<string name="start">START</string>
+	<string name="bigger">Bigger Sushi</string>
+	<string name="smaller">Smaller Sushi</string>
+	<color name="white">#FFFFFF</color>    
 
 </resources>

@@ -10,10 +10,12 @@
     android:layout_height="wrap_content" 
     android:text="@string/hello"
     />
-<com.hackamaroo.hw2.PaintBrushView android:id="@+id/pbView"
-    android:layout_width="fill_parent" 
+
+<com.hackamaroo.hw2.PaintBrushView
+    android:id="@+id/pbView"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    />
+    android:background="@drawable/background" />
 
 <LinearLayout 
     android:orientation="horizontal"

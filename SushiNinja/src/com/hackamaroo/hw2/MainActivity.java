@@ -13,12 +13,14 @@ import java.util.TimerTask;
 
 public class MainActivity extends Activity{
 
-	protected static long start;
+	protected long start;
 	protected static int ti;
 	protected static int Vy;
+	protected static int Vx;
+	
 	static int dt; 
 	Timer t; 
-	TimerTask tt; 
+	TimerTask tt;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,30 +31,36 @@ public class MainActivity extends Activity{
 		//Declare the timer
 		t = new Timer();
 		//Set the schedule function and rate
-		int inc = 0; 
+		//int inc = 0; 
 		ti = 0;
 		Vy = -200;
-		dt = 50;
+		dt = 100;
 		scheduleTT();  
-		
 	}
 	
 	public void scheduleTT(){
 		 
 		t.scheduleAtFixedRate(new TimerTask() {
-
 		    @Override
 		    public void run() {
 		        //Called each time when 1000 milliseconds (1 second) (the period parameter)
 		    	//We must use this function in order to change the text view text
 		    	runOnUiThread(new Runnable() {
-		    		final int Vx = 5; 
-		    
+		    		
 		    	    @Override
 		    	    public void run() {
 		    	        PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
-		    	        PaintBrushView.incY += Vy;
-		    	        PaintBrushView.incX -= Vx;
+		    	        
+		    	        pbv.increaseY(Vy);
+		 
+		    	        //ball will either go left or right
+		    	        if(pbv.isLeft()){
+		    	        	pbv.decreaseX(Vx);
+		    	        } 
+		    	        else{
+		    	        	pbv.increaseX(Vx);
+		    	        }
+		    	          	        
 		    	        /*PaintBrushView.incY -= Vx;
 		    	        PaintBrushView.incX += Vy; //+ 1*ti;
 		    	        */
@@ -78,21 +86,44 @@ public class MainActivity extends Activity{
 		dt);
 	}
 	
+	/*
 	public void onClearButtonClick(View view){
 		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
 		pbv.clearPoints();
 		pbv.invalidate();
 	}
+	*/
+	
+	public void onSlowVxButtonClick(View view){
+		Vx = (Vx / 2);
+	}
+	public void onFastVxButtonClick(View view){
+		Vx = (Vx * 2);
+	}
+	public void onSlowVyButtonClick(View view){
+		Vy = (Vy / 2);
+	}
+	public void onFastVyButtonClick(View view){
+		Vy = (Vy * 2);
+	}
+	public void onBiggerButtonClick(View view){
+		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
+		pbv.biggerSushi();
+	}
+	public void onSmallerButtonClick(View view){
+		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
+		pbv.smallerSushi();
+	}
 
+	
+	
 	public void onPaletteClick(View view){
 		PaintBrushView pbv = (PaintBrushView) findViewById(R.id.pbView);
-		/*
+		
 		PaletteView pv = (PaletteView) findViewById(R.id.pView);
 		pbv.setColor(pv.getColor()); 
 		pbv.setSize(pv.getSize()); 
-		*/
 	}
-
-
+	
 	
 }
