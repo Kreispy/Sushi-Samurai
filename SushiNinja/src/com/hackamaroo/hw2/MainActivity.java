@@ -34,7 +34,7 @@ public class MainActivity extends Activity{
 		//int inc = 0; 
 		ti = 0;
 		Vy = -200;
-		dt = 100;
+		dt = 150;
 		scheduleTT();  
 	}
 	

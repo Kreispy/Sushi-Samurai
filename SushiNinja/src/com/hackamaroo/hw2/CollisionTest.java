@@ -7,6 +7,13 @@ import org.junit.Before;
 
 public class CollisionTest {
 
+	/**
+	 * NOTE:
+	 * Look at CollisionTest2.java for tests. 
+	 * For some reason, the configuration for this test file isn't working on Angela's 
+	 * copy of the code, so she made CollisionTest2.java. 
+	 */
+	
 	Collision c;
 	Point p1;
 	Point p2;
@@ -23,9 +30,10 @@ public class CollisionTest {
 	
 	@Test
 	public void test() {
-		boolean result = c.checkCollision(p1, p2, 8, 0, 5);
+		/*boolean result = c.checkCollision(p1, p2, 8, 0, 5);
 		assertTrue(result);
 		System.out.println(c.getMinDist());
+		*/
 	}
 
 }

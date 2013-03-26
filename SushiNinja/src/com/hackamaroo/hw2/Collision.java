@@ -2,75 +2,112 @@ package com.hackamaroo.hw2;
 
 import java.util.*;
 
+import android.util.Log;
+
 public class Collision {
-	private int minDist; 
-	private float distanceAY; 
+	private double closeness; //closest point on the line segment drawn by the user
+	private double score; //score based off of closeness
 	
 	public Collision(){
-		minDist = -1; 
-		distanceAY = -1;
+		closeness = -1; 
+		score = 0; 
 	}
 	
-	public boolean checkCollision(Point first, Point last, int xc, int yc, int rc){
-		//TO DO
-		List<Point> linePoints = new ArrayList<Point>();
-		int x0 = (int)first.getX();
-		int x1 = (int)last.getX(); 
-		int y0 = (int)first.getY(); 
-		int y1 = (int)last.getY(); 
-	    double deltax = x1 - x0;
-	    double deltay = y1 - y0;
-	    double error = 0;
-	    if (deltax -0 < 0.000000001){
-	    	deltax = 0.00000000001; 
-	    }
-	    double deltaerr = Math.abs(deltay / deltax);    // Assume deltax != 0 (line is not vertical),
-	           // note that this division needs to be done in a way that preserves the fractional part
-	    int y = y0;
-	    for (int x = x0; x <= x1; x++){
-	         linePoints.add(new Point(x, y, 0, 0, true)); // Default values for params
-	         error = error + deltaerr;
-	         if (error >= 0.5){ 
-	             y = y + 1;
-	             error = error - 1.0;
-	         }
-	    }
-	    // Calculate the minimum distance
-	    for (int i = 0; i < linePoints.size(); i++) {
-	    	int px = (int) linePoints.get(i).getX();
-    		int py = (int) linePoints.get(i).getY();
-	    	if (i == 0) {
-	    		minDist = distance(px, py, xc, yc);
-	    	}
-	    	else {
-	    		int temp = distance(px, py, xc, yc);
-	    		if (temp < minDist) {
-	    			minDist = temp;
-	    		}
-	    	}
-	    }
-	    
-		return (minDist <= rc);
-	}
-	
+/*	
 	public boolean checkCollisionAY(Point first, Point last, int xc, int yc, int rc){
-		float slope = (last.getY() - first.getY()) / (last.getX() - first.getX()); 
-		float b = last.getY() - slope * last.getX(); 
-		distanceAY = (float) (Math.abs(slope*xc - yc + b) / Math.sqrt(slope*slope + 1));
-		if (distanceAY <= rc){
+		double slope = (last.getY() - first.getY()) / (last.getX() - first.getX()); 
+		double b = last.getY() - slope * last.getX(); 
+		distanceAY =  (Math.abs(slope*xc - yc + b) / Math.sqrt(slope*slope + 1));
+		closeness = distance(last.getX(), last.getY(), xc, yc); 
+		//be warned that this closeness can be very skewed b/c android doesn't sample EVERY point
+		
+		if (distanceAY <= rc && closeness < 2*rc){
+			score = (1 / (distanceAY + (closeness / 
+					distance(last.getX(), last.getY(), first.getX(), first.getY())))); 
+			//Log.v("score = ", Double.toString(score));
 			return true; 
 		}
+		score = 0; 
 		return false; 
+		
+		//Trying out newest refactoring of collisions
+		//return checkCollisionsVectors(first, last,  xc,  yc, rc); 
 
 	}
-	
-	public int distance(int x1, int y1, int x2, int y2){
-		return ((int) Math.sqrt((x1-x2)*(x1-x2) + (y1 - y2)*(y1-y2)));
+*/	
+	public double distance(double d, double e, double f, double g){
+		return ( Math.sqrt((d-f)*(d-f) + (e - g)*(e-g)));
 	}
 	
-	
-	public int getMinDist(){
-		return minDist; 
+	/**
+	 * 
+	 * @return score (double)
+	 */
+	public double getScore(){
+		return score; 
 	}
 	
+	public double getCloseness(){
+		return closeness; 
+	}
+	
+	public void reset(){
+		closeness = -1; 
+		score = 0; 
+	}
+	
+    public Point closest_point_on_seg(Point a, Point b, double xc, double yc){
+    	Point cPoint = new Point (xc, yc);
+        Vector seg_v = new Vector(a, b);
+        Vector pt_v = new Vector(a, cPoint);
+        if (a.distance(b) <= 0){
+            //"Invalid segment length"
+        }
+        
+        Vector seg_v_unit = new Vector(a, b);
+        seg_v_unit.makeUnit();
+        
+        double proj = pt_v.dot(seg_v_unit);
+        //System.out.println("proj = " + proj);
+        //System.out.println("seg_v.length() = " + seg_v.length());
+        if (proj <= 0){
+            return a;
+        }
+        if (proj >= seg_v.magnitude()){
+            return b;
+        }
+        Point closest = seg_v_unit.timesAdd(proj, a);
+        //System.out.println("closest x = " + closest.getX());
+        //System.out.println("closest y = " + closest.getY());
+        return closest;
+    }
+
+    public boolean checkCollisionsVectors(Point a, Point b, double xc, double yc, double circ_rad){
+        Point closest = closest_point_on_seg(a, b, xc, yc);
+        Point circ_pos = new Point(xc, yc);
+        closeness = circ_pos.distance(closest);
+        score = calcScore(closeness); 
+        System.out.println(score);
+        if (closeness > 1.0*circ_rad){ 
+        	//can change the constant*circ_rad to be more stringent or lenient for diff difficulty
+            return false;
+        }
+        else{
+            //Collision!!
+        	return true; 
+        }
+        
+    }
+    
+    private int calcScore(double c){
+    	if (c < 1000){
+    		//score is based off of a circular target with different regions associated with different points
+    		//max score possible is 1000
+    		return (int) (1000 - c); 
+    	}
+    	return 0; 
+    }
+
+
 }
+

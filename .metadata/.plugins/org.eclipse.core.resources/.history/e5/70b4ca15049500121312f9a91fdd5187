@@ -1,0 +1,30 @@
+package com.hackamaroo.hw2;
+
+public class Vector {
+
+	double x; 
+	double y; 
+	Point start; 
+	Point end; 
+	
+
+	public Vector (Point a, Point b){
+		x = b.getX() - a.getX();
+		y = b.getY() - a.getY();
+		start = a; 
+		end = b; 
+	}
+	
+	public Vector normalize(){
+		Point tempA = new Point(start.getX()/start.distance(end), 
+				start.getY()/start.distance(end));
+		Point tempB = new Point(end.getX()/start.distance(end), 
+				end.getY()/start.distance(end));
+		return new Vector(tempA, tempB); 
+	}
+	
+	public double length(){
+		return ( Math.sqrt((start.getX()-end.getX())*(start.getX()-end.getX())
+				+ (start.getY() - end.getY())*(start.getY()-end.getY())));
+	}
+}

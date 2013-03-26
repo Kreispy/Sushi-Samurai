@@ -44,6 +44,8 @@ public class PaintBrushView extends View implements OnTouchListener{
 	boolean checkCollide = false; 
 	boolean addPoint = false; 
 	boolean left = true;
+	
+	public double totalScore; 
 
 	public PaintBrushView(Context context) {
 		super(context);
@@ -79,19 +81,13 @@ public class PaintBrushView extends View implements OnTouchListener{
 		//Check for collisions
 		if(pdrawn.size() >=2 && addPoint){
 			//if(!pdrawn.get(pdrawn.size()-1).getFirst() && !pdrawn.get(pdrawn.size()-2).getFirst()){
-				checkCollide = col.checkCollisionAY(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), startX+incX+offset, startY+incY+offset, offset);
+				checkCollide = col.checkCollisionsVectors(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), startX+incX+offset, startY+incY+offset, offset);
 				Log.v("checkCollide", Boolean.toString(checkCollide));
 				addPoint = false; 
 			//}
 		}
+		
 		Paint p = new Paint();
-		circle.draw(canvas);
-		//inc +=10; 
-		
-		// Increase the radius a bit
-		//circle.setBounds(startY+incY, startX+incX, startY+50+incY, startX+50+incX);
-		circle.setBounds(startX+incX, startY+incY, startX+offset+incX, startY+offset+incY);
-		
 		
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
@@ -115,9 +111,18 @@ public class PaintBrushView extends View implements OnTouchListener{
 			MainActivity.ti = startTi; // reset time to zero
 			incX = 0; // reset everything
 			incY = 0; // reset everything
-			int image = sushiRand.nextInt(3);
-		    circle = sushi_images[image];
+			
+			if(checkCollide){
+				totalScore += col.getScore(); // user's total score
+			}
 			checkCollide = false; 
+			//col.reset(); 
+			
+		    circle = sushi_images[sushiRand.nextInt(3)];
+		    
+			
+			
+			Log.v("totalScore = ", Double.toString(totalScore));
 			
 			//pdrawn.clear();
 			invalidate(); 
@@ -128,7 +133,7 @@ public class PaintBrushView extends View implements OnTouchListener{
 			p.setColor(pt.getColor());
 			//canvas.drawCircle(pt.getX(),pt.getY(),pt.getSize(),p);
 			if(!pt.getFirst() && i != 0){
-				canvas.drawLine( pdrawn.get(i-1).getX(), pdrawn.get(i-1).getY(), pt.getX(), pt.getY(),p);
+				canvas.drawLine( (float)pdrawn.get(i-1).getX(), (float)pdrawn.get(i-1).getY(), (float)pt.getX(), (float)pt.getY(),p);
 			}
 			else{
 				p.setStrokeWidth(pt.getSize());
@@ -136,6 +141,15 @@ public class PaintBrushView extends View implements OnTouchListener{
 			
 		}
 		
+		
+		//inc +=10; 
+		
+		// Increase the radius a bit
+		//circle.setBounds(startY+incY, startX+incX, startY+50+incY, startX+50+incX);
+		circle.setBounds(startX+incX, startY+incY, startX+offset+incX, startY+offset+incY);
+		circle.draw(canvas);
+		
+		Log.v("totalScore = ", Double.toString(totalScore));
 	}	
 	
 	public boolean onTouch(View view, MotionEvent event){

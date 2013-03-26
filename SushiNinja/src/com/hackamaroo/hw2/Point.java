@@ -1,8 +1,8 @@
 package com.hackamaroo.hw2;
 
 public class Point {
-	private float x; 
-	private float y; 
+	private double x; 
+	private double y; 
 	private int color;
 	private int size;
 	private boolean first; 
@@ -14,13 +14,26 @@ public class Point {
 		size = s; 
 		first = b; 
 	}
+	public Point(double d, double e){
+		x = d; 
+		y = e; 
+		color = -1;
+		size = -1; 
+		first = false; 
+	}
 	
+	
+	
+	public double distance(Point b){
+		return ( Math.sqrt((x-b.getX())*(x-b.getX()) + (y - b.getY())*(y-b.getY())));
+	}
 
-	public float getX(){
+
+	public double getX(){
 		return x; 
 	}
 	
-	public float getY(){
+	public double getY(){
 		return y; 
 	}
 	

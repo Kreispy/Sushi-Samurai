@@ -31,22 +31,60 @@ public class CollisionTest2 {
 	
 	@Test
 	public void test() {
-		boolean result = c.checkCollisionAY(p1, p2, 8, 0, 8);
+		boolean result = c.checkCollisionsVectors(p1, p2, 8, 0, 8);
+		//System.out.println(c.getCloseness());
 		assertTrue(result);
-		System.out.println(c.getMinDist());
+		assertTrue(c.getCloseness() == Math.sqrt(12.8));
 	}
 	
 	@Test
 	public void testFalse() {
-		boolean result = c.checkCollisionAY(p1, p2, 8, 0, 2);
+		boolean result = c.checkCollisionsVectors(p1, p2, 8, 0, 2);
+		//System.out.println(c.getCloseness());
+		assertTrue(c.getCloseness() == Math.sqrt(12.8));
 		assertFalse(result);
-		System.out.println(c.getMinDist());
+		
 	}
 	
 	@Test
 	public void testList() {
-		boolean result = c.checkCollisionAY(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), 8, 0, 8);
+		boolean result = c.checkCollisionsVectors(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), 8, 0, 8);
+		//System.out.println(c.getCloseness());
+		assertTrue(c.getCloseness() == Math.sqrt(12.8));
 		assertTrue(result);
-		System.out.println(c.getMinDist());
+		
+	}
+	
+	@Test
+	public void testTooFar() {
+		boolean result = c.checkCollisionsVectors(p1, p2, 80, 0, 8);
+		//System.out.println(c.getCloseness());
+		assertTrue(c.getCloseness() == 68.26419266350405);
+		assertFalse(result);
+		
+	}
+	
+	@Test
+	public void testOnLine() {
+		boolean result = c.checkCollisionsVectors(p1, p2, 2, 1, 1);
+		//System.out.println(c.getCloseness());
+		assertTrue(c.getCloseness() == 0);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testOnExactlyA() {
+		boolean result = c.checkCollisionsVectors(p1, p2, 0, 0, 1);
+		//System.out.println(c.getCloseness());
+		assertTrue(result);
+		assertTrue(c.getCloseness() == 0);
+	}
+	
+	@Test
+	public void testOnExactlyB() {
+		boolean result = c.checkCollisionsVectors(p1, p2, 12, 6, 1);
+		//System.out.println(c.getCloseness());
+		assertTrue(result);
+		assertTrue(c.getCloseness() == 0);
 	}
 }
