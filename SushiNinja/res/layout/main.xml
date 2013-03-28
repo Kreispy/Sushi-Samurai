@@ -5,35 +5,54 @@
     android:layout_height="fill_parent"
     android:background="#ff000000"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
 
-<com.hackamaroo.hw2.PaintBrushView
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+
+    <ImageView
+        android:id="@+id/feedback"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/text20"
+        android:maxWidth="@dimen/width75"
+        android:src="@drawable/goodjob" 
+ 		android:visibility = "invisible"
+        />
+    
+<TextView
+    android:id="@+id/score"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:editable="true"
+    android:text="Total Score: 0"
+    android:textColor="@color/white"
+    android:textSize="@dimen/text20" />
+
+</LinearLayout>
+<com.project.sushi.CuttingBoard
     android:id="@+id/pbView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background" />
 
 <LinearLayout 
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
 
-	<com.hackamaroo.hw2.PaletteView  android:id="@+id/pView"
-	    android:layout_width="400px" 
-	    android:layout_height="wrap_content" 
-	    />
+ 
+<com.project.sushi.CuttingBoard
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    />
 
-    <Button 
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content"
-	    android:onClick="onClearButtonClick" 
-	    android:text="Clear"
-	    />
+
     
 </LinearLayout>
 

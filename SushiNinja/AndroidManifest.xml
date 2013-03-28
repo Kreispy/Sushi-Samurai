@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hackamaroo.hw2"
+    package="com.project.sushi"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -16,18 +16,28 @@
         
         <activity
             android:screenOrientation="landscape"
-            android:name="com.hackamaroo.hw2.MainMenu"
+            android:name="com.project.sushi.MainMenu"
             android:label="@string/app_name" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
+            </intent-filter>                        
+        </activity>
+
+         <activity
+            android:screenOrientation="landscape"
+            android:name="com.project.sushi.Options"
+            android:label="@string/app_name" >
+            
+                                    
         </activity>
         
         <activity
             android:screenOrientation="landscape"
-            android:name="com.hackamaroo.hw2.MainActivity"
+            android:name="com.project.sushi.MainActivity"
             android:label="@string/app_name" >
 
         </activity>

@@ -55,7 +55,7 @@ Dynamic libraries:
 
 VM Arguments:
 jvm_args: -Dfile.encoding=Cp1252 -Xbootclasspath:C:\Users\owner\Desktop\Android\sdk\platforms\android-17\android.jar 
-java_command: org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 49941 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames com.hackamaroo.hw2.CollisionTest
+java_command: org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 49941 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames com.project.sushi.CollisionTest
 Launcher Type: SUN_STANDARD
 
 Environment Variables:

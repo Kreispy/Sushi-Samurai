@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="25dp"
+    android:background="@drawable/optionpage" >
+    
+        <TextView  
+          android:id="@+id/text"
+          android:layout_margin="25dp"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content" 
+          android:text="@string/mode"
+          android:layout_centerHorizontal="true"/>
+    
+<RadioGroup
+    android:id="@+id/speed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@id/text">
+    
+    <RadioButton 
+        android:id="@+id/slow"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/slow"
+        android:onClick="onSpeedRadioButtonClicked"/>
+  <RadioButton 
+        android:id="@+id/fast"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fast"
+        android:onClick="onSpeedRadioButtonClicked"/>
+</RadioGroup>
+
+<RadioGroup
+    android:id="@+id/size"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_below="@id/speed"
+    android:layout_centerHorizontal="true"
+    >
+    
+    <RadioButton 
+        android:id="@+id/small"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/small"
+        android:onClick="onSizeRadioButtonClicked"/>
+   <RadioButton 
+        android:id="@+id/large"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/large"
+        android:onClick="onSizeRadioButtonClicked"/>
+</RadioGroup>
+
+    <Button
+        android:id="@+id/slice"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/size"
+        android:text="@string/slice" 
+        android:layout_centerHorizontal="true"/>
+
+
+    </RelativeLayout>
