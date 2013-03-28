@@ -1,0 +1,69 @@
+package com.hackamaroo.hw2;
+
+public class Vector {
+
+	private double x; 
+	private double y; 
+	private Point start; 
+	private Point end; 
+	private double x_unit; 
+	private double y_unit; 
+	
+
+	public Vector (Point a, Point b){
+		x = b.getX() - a.getX();
+		y = b.getY() - a.getY();
+		start = a; 
+		end = b; 
+		x_unit = b.getX() - a.getX();
+		y_unit = b.getY() - a.getY();
+	}
+	
+	
+	public void makeUnit(){
+		double length = magnitude();
+		x_unit = x/length; 
+		y_unit = y/length; 
+		/*System.out.println("x_unit: " + x_unit);
+		System.out.println("y_unit: " + y_unit);
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("magnitude: " + magnitude());
+		*/
+	}
+	
+	public double magnitude(){
+		//System.out.println("x_unit: " + x_unit);
+		//System.out.println("y_unit: " + y_unit);
+		if (x_unit != x || y_unit != y){
+			return Math.sqrt(x_unit*x_unit + y_unit*y_unit);
+		}
+		else{
+			return Math.sqrt(x*x + y*y);
+		}
+	}
+	
+	
+	public double dot(Vector a){
+		/*System.out.println("x_unit: " + x_unit);
+		System.out.println("y_unit: " + y_unit);
+		System.out.println("x2: " + a.x_unit);
+		System.out.println("y2: " + a.y_unit);*/
+		return a.x_unit*x_unit + a.y_unit*y_unit; 
+	}
+	
+	// Takes a vector, times it by a magnitude, and then adds to a point
+	public Point timesAdd(double m, Point a ){
+		double x_temp = x_unit*m +a.getX(); 
+		double y_temp = y_unit*m + a.getY(); 
+		System.out.println(m);
+		System.out.println(a.getX());
+		System.out.println(a.getY());
+		System.out.println(x_unit);
+		System.out.println(y_unit);
+		System.out.println(x_temp);
+		System.out.println(y_temp);
+		return new Point(x_temp, y_temp);
+	}
+	
+}

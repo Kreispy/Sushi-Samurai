@@ -10,10 +10,10 @@ import org.junit.Test;
 
 public class CollisionTest2 {
 
-	Collision c;
-	Point p1;
-	Point p2;
-	List<Point> pdrawn; 
+	private Collision c;
+	private Point p1;
+	private Point p2;
+	private List<Point> pdrawn; 
 	
 	@Before
 	public void setUp() {
@@ -32,25 +32,26 @@ public class CollisionTest2 {
 	@Test
 	public void test() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 8, 0, 8);
-		//System.out.println(c.getCloseness());
 		assertTrue(result);
 		assertTrue(c.getCloseness() == Math.sqrt(12.8));
+		assertTrue(c.getScore() == 996);
 	}
 	
 	@Test
 	public void testFalse() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 8, 0, 2);
-		//System.out.println(c.getCloseness());
 		assertTrue(c.getCloseness() == Math.sqrt(12.8));
+		assertTrue(c.getScore() == 996);
 		assertFalse(result);
 		
 	}
 	
 	@Test
 	public void testList() {
-		boolean result = c.checkCollisionsVectors(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), 8, 0, 8);
-		//System.out.println(c.getCloseness());
+		boolean result = c.checkCollisionsVectors(pdrawn.get(pdrawn.size()-2), 
+				pdrawn.get(pdrawn.size()-1), 8, 0, 8);
 		assertTrue(c.getCloseness() == Math.sqrt(12.8));
+		assertTrue(c.getScore() == 996);
 		assertTrue(result);
 		
 	}
@@ -58,33 +59,39 @@ public class CollisionTest2 {
 	@Test
 	public void testTooFar() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 80, 0, 8);
-		//System.out.println(c.getCloseness());
 		assertTrue(c.getCloseness() == 68.26419266350405);
 		assertFalse(result);
-		
+		assertTrue(c.getScore() == 931);
 	}
 	
 	@Test
 	public void testOnLine() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 2, 1, 1);
-		//System.out.println(c.getCloseness());
 		assertTrue(c.getCloseness() == 0);
 		assertTrue(result);
+		assertTrue(c.getScore() == 1000);
 	}
 	
 	@Test
-	public void testOnExactlyA() {
+	public void testOnExactlyPointA() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 0, 0, 1);
-		//System.out.println(c.getCloseness());
 		assertTrue(result);
 		assertTrue(c.getCloseness() == 0);
+		assertTrue(c.getScore() == 1000);
 	}
 	
 	@Test
-	public void testOnExactlyB() {
+	public void testOnExactlyPointB() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 12, 6, 1);
-		//System.out.println(c.getCloseness());
 		assertTrue(result);
 		assertTrue(c.getCloseness() == 0);
+		assertTrue(c.getScore() == 1000);
 	}
+	
+	@Test
+	public void testNullPoints() {
+		boolean result = c.checkCollisionsVectors(null, null, 12, 6, 1);
+		assertFalse(result);
+	}
+
 }

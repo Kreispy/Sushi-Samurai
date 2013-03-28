@@ -1,0 +1,69 @@
+package com.hackamaroo.hw2;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class PointTest {
+
+	@Test
+	public void testPointFloatFloatIntIntBoolean() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testPointDoubleDouble() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetX() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetY() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetColor() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetSize() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetFirst() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetX() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetY() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetColor() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetSize() {
+		fail("Not yet implemented");
+	}
+
+}

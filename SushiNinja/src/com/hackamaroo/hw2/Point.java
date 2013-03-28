@@ -6,6 +6,7 @@ public class Point {
 	private int color;
 	private int size;
 	private boolean first; 
+	private boolean forWithinCollision; 
 	
 	public Point(float x1, float y1, int c, int s, boolean b){
 		x = x1; 
@@ -13,16 +14,17 @@ public class Point {
 		color = c;
 		size = s; 
 		first = b; 
+		forWithinCollision = false; 
 	}
+	
 	public Point(double d, double e){
 		x = d; 
 		y = e; 
 		color = -1;
 		size = -1; 
 		first = false; 
+		forWithinCollision = true; 
 	}
-	
-	
 	
 	public double distance(Point b){
 		return ( Math.sqrt((x-b.getX())*(x-b.getX()) + (y - b.getY())*(y-b.getY())));
@@ -47,6 +49,10 @@ public class Point {
 	
 	public boolean getFirst(){
 		return first; 
+	}
+	
+	public boolean getCollisionFlag(){
+		return forWithinCollision; 
 	}
 	
 	public void setX(float a){

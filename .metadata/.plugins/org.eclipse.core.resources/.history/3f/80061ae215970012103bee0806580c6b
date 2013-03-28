@@ -1,0 +1,60 @@
+package com.hackamaroo.hw2;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class VectorTest {
+
+	private Vector vcn; 
+	private Vector vcnUnit; 
+	private Point p1;
+	private Point p2; 
+	private Point c; 
+	private Point n; 
+	private Point z;
+	
+	@Before
+	public void setUp() {
+		p1 = new Point(2, 4, 1111, 3, true); 
+		p2 = new Point(-2, -4, 1010, 0, false); 
+		c = new Point(2, 4); 
+		n = new Point(-2, -4);
+		z = new Point(0,0);
+		vcn = new Vector(c, n);
+		vcnUnit = new Vector(c,n);
+		vcnUnit.makeUnit();
+	}
+	
+	@Test
+	public void testVector() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testMakeUnit() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testMagnitude() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDot() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testTimesAdd() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAdd() {
+		fail("Not yet implemented");
+	}
+
+}
