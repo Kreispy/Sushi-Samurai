@@ -88,7 +88,7 @@ public class MainActivity extends Activity{
 		    	        //Log.v("Vy = ", Integer.toString(Vy));
 		    	        //Log.v("t = ", Integer.toString(ti));
 		    	        //Log.v(Integer.toString(CuttingBoard.incX), Integer.toString(CuttingBoard.incY));		    	        
-		    	        Log.v("dt", Integer.toString(dt));
+		    	        //Log.v("dt", Integer.toString(dt));
 		    	        pbv.invalidate();
 		    	        
 		    	       

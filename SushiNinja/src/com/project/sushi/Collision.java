@@ -17,13 +17,17 @@ public class Collision {
 		return closeness; 
 	}
 	
+	public void extrapolateLine(Point first, Point last, double xc, double yc, double rc){
+		double slope = ((last.getY() - first.getY()) / (last.getX() - first.getX())); 
+		double b = last.getY() - slope * last.getX(); 
+		closeness = (Math.abs(slope*xc - yc + b) / Math.sqrt(slope*slope + 1));
+		score = calcScore(closeness);
+	}
+	
     private Point closest_point_on_seg(Point a, Point b, double xc, double yc){
     	Point cPoint = new Point (xc, yc);
         Vector seg_v = new Vector(a, b);
         Vector pt_v = new Vector(a, cPoint);
-        if (a.distance(b) <= 0){
-            //"Invalid segment length"
-        }
         
         Vector seg_v_unit = new Vector(a, b);
         seg_v_unit.makeUnit();
@@ -54,6 +58,7 @@ public class Collision {
         }
         else{
             //Collision!!
+        	extrapolateLine(a, b, xc, yc, circ_rad);
         	return true; 
         }
         

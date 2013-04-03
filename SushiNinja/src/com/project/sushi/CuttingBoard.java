@@ -88,12 +88,12 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas){
-		Log.v("pdrawnsize", Integer.toString(pdrawn.size()));
+		//Log.v("pdrawnsize", Integer.toString(pdrawn.size()));
 		//Check for collisions
 		if(pdrawn.size() >=2 && addPoint){
 			//if(!pdrawn.get(pdrawn.size()-1).getFirst() && !pdrawn.get(pdrawn.size()-2).getFirst()){
 				checkCollide = col.checkCollisionsVectors(pdrawn.get(pdrawn.size()-2), pdrawn.get(pdrawn.size()-1), startX+incX+offset, startY+incY+offset, offset);
-				Log.v("checkCollide", Boolean.toString(checkCollide));
+				//Log.v("checkCollide", Boolean.toString(checkCollide));
 				addPoint = false; 
 			//}
 		}
@@ -103,49 +103,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
 		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 || checkCollide) {
-			startY = getHeight();
-				//random.nextInt(150)+(getWidth()/2)-100; //800; //getHeight();
-			
-			if(random.nextBoolean()){
-				left = true;
-				startX = random.nextInt(getWidth()/4);
-			}
-			else{
-				left = false;
-				startX = getWidth() - random.nextInt(getWidth()/4);
-			}
-			
-			Log.v("startx", Integer.toString(getWidth()));
-			Log.v("starty", Integer.toString(getHeight()));
-			MainActivity.Vy = -(getHeight()/25 + random.nextInt((getHeight()/50)+1)); // reset to default value
-			MainActivity.Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
-			MainActivity.ti = startTi; // reset time to zero
-			incX = 0; // reset everything
-			incY = 0; // reset everything
-			
-			if(checkCollide){
-				totalScore += col.getScore(); // user's total score
-				updateScore();
-				feedback.setVisibility(View.VISIBLE);
-				feedback.setImageResource(R.drawable.goodjob);
-				mpSuccess.start();
-			}
-			else{
-				feedback.setVisibility(View.VISIBLE);
-				feedback.setImageResource(R.drawable.tryagain);
-				mpFail.start();
-			}
-			checkCollide = false; 
-			//col.reset(); 
-			
-		    circle = sushi_images[sushiRand.nextInt(3)];
-		    
-			
-			
-			Log.v("totalScore = ", Double.toString(totalScore));
-			
-			//pdrawn.clear();
-			invalidate(); 
+			regenerateSushi(); 
 		}
 
 		for(int i = 0; i < pdrawn.size(); i++){
@@ -171,8 +129,112 @@ public class CuttingBoard extends View implements OnTouchListener{
 		
 		circle.draw(canvas);
 		
-		Log.v("totalScore = ", Double.toString(totalScore));
+		//Log.v("totalScore = ", Double.toString(totalScore));
 	}	
+	
+	private void regenerateSushi(){
+		generateStartingPosition(); 
+				
+		
+		//random.nextInt(150)+(getWidth()/2)-100; //800; //getHeight();
+	
+		
+	
+		//Log.v("startx", Integer.toString(getWidth()));
+		//Log.v("starty", Integer.toString(getHeight()));
+		
+		MainActivity.ti = startTi; // reset time to zero
+		incX = 0; // reset everything
+		incY = 0; // reset everything
+	
+		if(checkCollide){
+			totalScore += col.getScore(); // user's total score
+			updateScore();
+			feedback.setVisibility(View.VISIBLE);
+			feedback.setImageResource(R.drawable.goodjob);
+			mpSuccess.start();
+		}
+		else{
+			feedback.setVisibility(View.VISIBLE);
+			feedback.setImageResource(R.drawable.tryagain);
+			mpFail.start();
+		}
+		checkCollide = false; 
+		//col.reset(); 
+	
+		circle = sushi_images[sushiRand.nextInt(3)];
+    
+	
+	
+		//Log.v("totalScore = ", Double.toString(totalScore));
+	
+		//pdrawn.clear();
+		invalidate(); 
+	}
+	
+	private void generateStartingPosition(){
+		int yGeneration = random.nextInt(3);
+		MainActivity.Vy = -(getHeight()/25 + random.nextInt((getHeight()/50)+1)); // reset to default value
+		MainActivity.Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
+		switch (yGeneration){
+			case 0:
+				startY = getHeight();
+				if(random.nextBoolean()){
+					left = true;
+					//startX = random.nextInt(getWidth()/4);
+					startX = random.nextInt(getWidth());
+				}
+				else{
+					left = false;
+					//startX = getWidth() - random.nextInt(getWidth()/4);
+					startX = getWidth() - random.nextInt(getWidth());
+				}
+				
+				break; 
+			case 1:
+				left = true;
+				startY = random.nextInt(2*getHeight()/4) + getHeight()/4;
+				startX = 0; 
+				generateVyFromWalls();
+				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
+				break;
+			case 2:
+				left = false; 
+				startY = random.nextInt(2*getHeight()/4) + getHeight()/4;
+				startX = getWidth(); 
+				generateVyFromWalls();
+				//MainActivity.Vy = -1 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1)); 
+				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
+				break;
+		}
+	}
+	
+	private void generateVyFromWalls(){
+		MainActivity.Vy = -1 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )); 
+		double vsquared = MainActivity.Vy*MainActivity.Vy + MainActivity.Vx*MainActivity.Vx;
+		double range = vsquared;
+		double angle = 90; 
+		if(MainActivity.Vx < 0){
+			angle = 180 + Math.atan(MainActivity.Vy / MainActivity.Vx);
+		}
+		else if (MainActivity.Vx < 0){
+			angle = Math.atan(MainActivity.Vy / MainActivity.Vx);
+		}
+		range = vsquared*Math.sin(2*angle);
+		Log.v("range: ", Double.toString(range));
+		Log.v("Start x: ", Double.toString(startX));
+		Log.v("Start y: ", Double.toString(startY));
+		Log.v("V x: ", Double.toString(MainActivity.Vx));
+		Log.v("V y: ", Double.toString(MainActivity.Vy));
+		Log.v("V 2: ", Double.toString(vsquared));
+		Log.v("angle: ", Double.toString(angle));
+		if (range < 100){
+			
+			//Log.v("max x: ", Double.toString(getWidth()));
+			//Log.v("max y: ", Double.toString(getHeight()));
+			generateVyFromWalls();
+		}
+	}
 	
 	public boolean onTouch(View view, MotionEvent event){
 		if (event.getAction() == MotionEvent.ACTION_DOWN ) {
