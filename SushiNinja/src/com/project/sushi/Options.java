@@ -13,6 +13,7 @@ import com.project.sushi.R;
 public class Options extends Activity {
  
 	Button button;
+	Button backbutton;
  
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,21 @@ public class Options extends Activity {
 			public void onClick(View arg0) {
  
 			    Intent intent = new Intent(context, MainActivity.class);
+			    finish();
+			    			startActivity(intent);   
+ 
+			}
+ 
+		});
+		
+		backbutton = (Button) findViewById(R.id.back);
+		 
+		backbutton.setOnClickListener(new OnClickListener() {
+ 
+			@Override
+			public void onClick(View arg0) {
+ 
+			    Intent intent = new Intent(context, MainMenu.class);
 			    finish();
 			    			startActivity(intent);   
  

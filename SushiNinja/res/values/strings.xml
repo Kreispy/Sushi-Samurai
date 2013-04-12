@@ -7,9 +7,12 @@
     <string name="hello">Second Iteration</string>
     
     
-    <string name="mode">Please select optional game settings.</string>
+    <string name="mode"><b>Please select optional game settings.</b></string>
     <string name="start">START</string>
-    
+    <string name="restart">Play Again!</string>
+	<string name="end">GTFO!</string>
+	<string name="over">Game Over!</string>
+	
 	<string name="fast">Fast</string>
 	<string name="normal">Normal</string>
 	<string name="slow">Slow</string>
@@ -19,6 +22,8 @@
 	<string name="large">Large</string>
 	
 	<string name="slice">Slice the Sushi!</string>
+	
+	
 	
 	<string name="bigger">Bigger Sushi</string>
 	<string name="smaller">Smaller Sushi</string>

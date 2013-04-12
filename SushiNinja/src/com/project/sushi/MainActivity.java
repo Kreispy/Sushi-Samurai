@@ -5,7 +5,7 @@ package com.project.sushi;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
+
 import com.project.sushi.R;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -65,18 +65,19 @@ public class MainActivity extends Activity{
 		    	    @Override
 		    	    public void run() {
 		    	    	
-		    	        CuttingBoard pbv = (CuttingBoard) findViewById(R.id.pbView);
-		    	        pbv.scoreboard = (TextView) findViewById(R.id.score);
-		    	        pbv.feedback = (ImageView) findViewById(R.id.feedback);
+		    	        CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
+		    	        cb.scoreboard = (TextView) findViewById(R.id.score);
+		    	        cb.feedback = (ImageView) findViewById(R.id.feedback);
 		    	        
-		    	        pbv.increaseY(Vy);
+		    	        
+		    	        cb.increaseY(Vy);
 		 
 		    	        //ball will either go left or right
-		    	        if(pbv.isLeft()){
-		    	        	pbv.decreaseX(Vx);
+		    	        if(cb.isLeft()){
+		    	        	cb.decreaseX(Vx);
 		    	        } 
 		    	        else{
-		    	        	pbv.increaseX(Vx);
+		    	        	cb.increaseX(Vx);
 		    	        }
 		    	          	        
 		    	        /*CuttingBoard.incY -= Vx;
@@ -89,7 +90,7 @@ public class MainActivity extends Activity{
 		    	        //Log.v("t = ", Integer.toString(ti));
 		    	        //Log.v(Integer.toString(CuttingBoard.incX), Integer.toString(CuttingBoard.incY));		    	        
 		    	        //Log.v("dt", Integer.toString(dt));
-		    	        pbv.invalidate();
+		    	        cb.invalidate();
 		    	        
 		    	       
 		    	    }

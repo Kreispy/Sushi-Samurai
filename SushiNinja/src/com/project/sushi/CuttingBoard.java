@@ -7,6 +7,7 @@ import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -39,7 +40,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 	public MediaPlayer mpSuccess = MediaPlayer.create(getContext(), R.raw.bladecut);
 	public MediaPlayer mpFail = MediaPlayer.create(getContext(), R.raw.miss);
 	
-	private int lives = 10;//for a game over / end screen.
+	private int sushiCut = 10;//for a game over / end screen.
 	
 	private int startY = 0;
 	private int startX = 0;
@@ -146,13 +147,20 @@ public class CuttingBoard extends View implements OnTouchListener{
 		MainActivity.ti = startTi; // reset time to zero
 		incX = 0; // reset everything
 		incY = 0; // reset everything
-	
+		
+		if(sushiCut == 0){
+			Intent gameOver = new Intent (getContext(), GameOver.class);
+			getContext().startActivity(gameOver);
+		}
+		
 		if(checkCollide){
 			totalScore += col.getScore(); // user's total score
 			updateScore();
 			feedback.setVisibility(View.VISIBLE);
 			feedback.setImageResource(R.drawable.goodjob);
 			mpSuccess.start();
+		
+			sushiCut--;
 		}
 		else{
 			feedback.setVisibility(View.VISIBLE);
@@ -161,7 +169,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 		}
 		checkCollide = false; 
 		//col.reset(); 
-	
+		
 		circle = sushi_images[sushiRand.nextInt(3)];
     
 	
@@ -252,6 +260,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 			addPoint = true; 
 			invalidate();
 		}
+		
+		
 		return true; 
 		
 	}
@@ -294,7 +304,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 	}
 	public void updateScore(){
 		if(scoreboard != null){
-			scoreboard.setText("Total Score: " + totalScore);
+			scoreboard.setText("Total Score: " + totalScore + "\t Remaining Sushi: " + sushiCut);
 		}
 	}
 	
