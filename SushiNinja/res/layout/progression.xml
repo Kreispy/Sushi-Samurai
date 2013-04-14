@@ -16,25 +16,15 @@
         android:textColor="@color/black" />
     
     <Button
-        android:id="@+id/slice"
+        android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="onNextLevelClick"
         android:layout_margin="25dp"
         android:layout_marginTop="83dp"
-        android:text="@string/slice" />
-    
-      <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="202dp"
-        android:background = "@drawable/backbutton"
-        />
-
+        android:text="@string/next" />
 
     </RelativeLayout>

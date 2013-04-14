@@ -18,7 +18,7 @@ public class GameOver extends Activity {
 	}
 
 	public void onRestartClick(View v) {
-		
+		MainActivity.reset = true;
 		Intent intent = new Intent(this, MainMenu.class);
 		finish();
 		startActivity(intent);

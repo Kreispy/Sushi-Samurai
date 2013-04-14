@@ -38,7 +38,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Intent intent = new Intent(context, Options.class);
+				Intent intent = new Intent(context, Tutorial.class);
 				finish();
 				startActivity(intent);
 
@@ -52,11 +52,11 @@ public class MainMenu extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-
+				/*
 				Intent intent = new Intent(context, LeaderBoard.class);
 				finish();
 				startActivity(intent);
-
+				*/
 			}
 
 		});
