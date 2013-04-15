@@ -13,42 +13,51 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
-            android:name="com.project.sushi.MainMenu"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:name="com.project.sushi.MainMenu"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            
             </intent-filter>
+                                    
         </activity>
-        <activity
-            android:name="com.project.sushi.LeaderBoard"
+
+         <activity
             android:screenOrientation="landscape"
+            android:name="com.project.sushi.Options"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            
+                                    
         </activity>
+        
         <activity
-            android:name="com.project.sushi.Tutorial"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-        </activity>
-        <activity
             android:name="com.project.sushi.MainActivity"
-            android:noHistory="true"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:noHistory="true">
+
         </activity>
-        <activity
-            android:name="com.project.sushi.Progression"
+                
+         <activity
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-        </activity>
-        <activity
             android:name="com.project.sushi.GameOver"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+                                               
         </activity>
+        
+           <activity
+            android:screenOrientation="landscape"
+            android:name="com.project.sushi.LeaderBoard"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+                                               
+        </activity>
+                
     </application>
 
 </manifest>
