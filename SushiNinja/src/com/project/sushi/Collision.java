@@ -58,7 +58,7 @@ public class Collision {
         }
         else{
             //Collision!!
-        	extrapolateLine(a, b, xc, yc, circ_rad);
+        	//extrapolateLine(a, b, xc, yc, circ_rad);
         	return true; 
         }
         
@@ -73,6 +73,8 @@ public class Collision {
     	}
     	return 0; 
     }
+    
+    
 
 
 }

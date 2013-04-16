@@ -1,0 +1,48 @@
+package com.project.sushi;
+
+import java.util.HashMap;
+
+import android.graphics.drawable.Drawable;
+
+public class Cuttable {
+	
+	private String name; 
+	private Drawable image; 
+	private HashMap<String, Integer> recipe; 
+	private HashMap<String, Drawable> stringDrawMap = new HashMap<String, Drawable>(); 
+	
+	public Cuttable(String n, Drawable d, HashMap<String, Integer> r){
+		name = n; 
+		image = d; 
+		recipe = r; 
+	}
+	
+	public Cuttable(String n, Drawable d){
+		name = n; 
+		image = d; 
+		recipe = new HashMap<String, Integer>(); 
+	}
+	
+	public Cuttable(String n){
+		name = n; 
+		recipe = new HashMap<String, Integer>(); 
+		stringDrawMap.put("ingredient1", R.drawable.sushi1);
+		stringDrawMap.put("ingredient2", R.drawable.sushi2);
+		image = d; 
+	}
+	
+	public boolean hasRecipe(){
+		if(recipe.size() == 0){
+			return false; 
+		}
+		return true; 
+	}
+	
+	public String getName(){
+		return name; 
+	}
+
+	public HashMap<String, Integer> getRecipe(){
+		return recipe; 
+	}
+}

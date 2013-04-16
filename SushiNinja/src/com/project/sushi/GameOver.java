@@ -26,8 +26,8 @@ public class GameOver extends Activity {
 	}
 
 	public void onEndClick(View v) {
-
-		finish();
+		//finish();
+		System.exit(0);
 
 	}
 	
