@@ -3,6 +3,7 @@ package com.project.sushi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +19,7 @@ public class MainMenu extends Activity {
 
 	Button button;
 	Button scorebutton;
+	MediaPlayer intro;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,8 @@ public class MainMenu extends Activity {
 		setContentView(R.layout.start);
 		addListenerOnButton();
 		RunAnimations();
+		intro = MediaPlayer.create(this, R.raw.blackbutterfly);
+		intro.start();
 	}
 
 	public void addListenerOnButton() {

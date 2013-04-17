@@ -17,11 +17,15 @@
 
     <TextView
         android:id="@+id/scoreboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/back"
-        android:layout_marginRight="32dp"
-        android:text="TextView" />
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/leaderboard"
+        android:gravity="center"
+        android:lineSpacingExtra ="40dp"
+        android:textSize="@dimen/text25"
+        android:typeface="sans" />
 
     </RelativeLayout>

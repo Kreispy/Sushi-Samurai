@@ -21,40 +21,7 @@ public class Options extends Activity {
 		setContentView(R.layout.options);
 		addListenerOnButton();
 	}
- 
-	public void onSpeedRadioButtonClicked(View view) {
-	    // Is the button now checked?
-	    boolean checked = ((RadioButton) view).isChecked();
-	    
-	    // Check which radio button was clicked
-	    switch(view.getId()) {
-	        case R.id.slow:
-	            if (checked)
-	                MainActivity.slow = true;
-	            break;
-	        case R.id.fast:
-	            if (checked)
-	            	MainActivity.fast = true;
-	            break;
-	    }
-	}
-	
-	public void onSizeRadioButtonClicked(View view) {
-	    // Is the button now checked?
-	    boolean checked = ((RadioButton) view).isChecked();
-	    
-	    // Check which radio button was clicked
-	    switch(view.getId()) {
-	        case R.id.small:
-	            if (checked)
-	            	CuttingBoard.offset -= 40;
-	            	break;
-	       case R.id.large:
-	            if (checked)
-	            	CuttingBoard.offset += 25;
-	            break;
-	    }
-	}
+
 	
 	public void addListenerOnButton() {
  

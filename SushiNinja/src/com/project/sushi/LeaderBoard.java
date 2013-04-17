@@ -41,8 +41,6 @@ public class LeaderBoard extends Activity{
 		addListenerOnButton();
 		settings = getSharedPreferences(PREFERENCE_KEY, 0);
 		
-		
-		LinearLayout lView = new LinearLayout(this);
 
 		// TEST
 		/*
@@ -62,19 +60,16 @@ public class LeaderBoard extends Activity{
 		List<Integer> scoreList = loadList(arrayName, this.getApplicationContext());
 		String displayString = "";
 		
-		myText = new TextView(this);
+		myText = (TextView)findViewById(R.id.scoreboard);
 		
-		
+		displayString += "\n";
+		displayString += "\n";
 		for (int i=0; i < scoreList.size(); i++){
-			displayString += "DefaultUser" + (i+1) + " : " + scoreList.get(i) + "\n";
+			displayString += "Top Ninja " + (i+1) + " : " + scoreList.get(i) + "\n";
 		}
 		this.scoresList = scoreList;
 		
 		myText.setText(displayString);
-
-		lView.addView(myText);
-
-		setContentView(lView);
 	}
 	
 	public SharedPreferences getSharedPreferences(){

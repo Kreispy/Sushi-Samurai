@@ -5,4 +5,5 @@
     <dimen name="text20">20dp</dimen>
     <dimen name="width75">75dp</dimen>
     <dimen name="width120">120dp</dimen>
+    <dimen name="text35">35dp</dimen>
 </resources>

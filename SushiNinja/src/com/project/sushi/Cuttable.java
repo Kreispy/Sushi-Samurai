@@ -1,21 +1,26 @@
 package com.project.sushi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 public class Cuttable {
 	
 	private String name; 
 	private String prevName; 
-	private int image; 
+	private int image;
+	private int sound;
 	private HashMap<String, Integer> recipe; 
 	private HashMap<String, Integer> stringDrawMap = new HashMap<String, Integer>(); 
 	private boolean processed; 
 	private HashMap<String, String> ingProcessMap = new HashMap<String, String>();
-	
+	private HashMap<String, Integer> soundMap = new HashMap<String, Integer>();
 	
 	public Cuttable(String n, int d, HashMap<String, Integer> r){
-		name = n; 
+		name = n;    
 		prevName = n; 
 		image = d; 
 		recipe = r; 
@@ -41,11 +46,25 @@ public class Cuttable {
 		stringDrawMap.put("sushi", R.drawable.sushi);
 		stringDrawMap.put("gj", R.drawable.goodjob);
 		stringDrawMap.put("nori", R.drawable.nori);
-		stringDrawMap.put("rawseaweed", R.drawable.rawseaweed);
+		stringDrawMap.put("rawseaweed", R.drawable.seaweed);
 		stringDrawMap.put("sashimi", R.drawable.sashimi);
 		stringDrawMap.put("livefish", R.drawable.livefish);
 		
+		soundMap.put("rawseaweed", R.raw.seaweed);
+		soundMap.put("gj", R.raw.blade4);
+		soundMap.put("livefish", R.raw.fish);
+		soundMap.put("ingredient1", R.raw.bladecut);
+		
 		image = stringDrawMap.get(n); 
+		
+		if(soundMap.containsKey(n)){
+			sound = soundMap.get(n);
+		}
+		else{
+			sound = -1;
+		}
+		
+		
 		processed = false; 
 		init();
 	}
@@ -76,6 +95,10 @@ public class Cuttable {
 		return image; 
 	}
 	
+	public int getSound(){
+		return sound;
+	}
+	
 	public boolean getProcessed(){
 		return processed; 
 	}
@@ -101,5 +124,30 @@ public class Cuttable {
 	}
 	
 
+	public boolean hasSound(String n){
+		return (soundMap.containsKey(n));
+	}
 	
+	public boolean checkRecipeMade(HashMap<String, Integer> ingredients){
+		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 
+		while(it.hasNext()){
+			Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
+			if(ingredients.get(pairs.getKey()) < pairs.getValue()){
+				return false; 
+			}
+		}
+		return true; 
+	}
+	
+	public ArrayList<Cuttable> getMissingIng(HashMap<String, Integer> ingredients){
+		ArrayList<Cuttable> toBeSpawn = new ArrayList<Cuttable>(); 
+		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 
+		while(it.hasNext()){
+			Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
+			if(ingredients.get(pairs.getKey()) < pairs.getValue()){
+				toBeSpawn.add(new Cuttable(pairs.getKey())); //adds missing recipe peices in 
+			}
+		}
+		return toBeSpawn; 
+	}
 }

@@ -66,8 +66,10 @@ public class MainActivity extends Activity{
 		    	    public void run() {
 		    	    	
 		    	        CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
-		    	        cb.scoreboard = (TextView) findViewById(R.id.score);
+		    	        cb.scoreboard = (TextView) findViewById(R.id.score1);
 		    	        cb.feedback = (ImageView) findViewById(R.id.feedback);
+		    	        cb.remaining = (TextView) findViewById(R.id.remaining);
+		    	        cb.setText();
 		    	        
 		    	        
 		    	        cb.increaseY(Vy);

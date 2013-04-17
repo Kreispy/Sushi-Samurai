@@ -10,50 +10,78 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-
-    <ImageView
-        android:id="@+id/feedback"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:maxHeight="@dimen/text20"
-        android:maxWidth="@dimen/width75"
-        android:src="@drawable/goodjob" 
- 		android:visibility = "invisible"
-        />
-    
-<TextView
-    android:id="@+id/score"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:editable="true"
-    android:text="Total Score: 0"
-    android:textColor="@color/white"
-    android:textSize="@dimen/text20" />
-
 </LinearLayout>
-<com.project.sushi.CuttingBoard
-    android:id="@+id/pbView"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/background" />
 
-<LinearLayout 
+<FrameLayout 
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-
- 
-<com.project.sushi.CuttingBoard
-    android:layout_width="fill_parent" 
+	<com.project.sushi.CuttingBoard
+    android:id="@+id/pbView"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    />
+    android:background="@drawable/background" />
+	
+	<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+     
+	    <ImageView
+        android:id="@+id/feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/feedback_default" 
+        />
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content">
+    	 <ImageView
+        android:id="@+id/scoreback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/score" 
+        />
+
+	    <TextView
+	        android:id="@+id/score1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:layout_marginLeft="120dp"
+	        android:editable="true"
+	        android:textColor="@color/black"
+	        android:textSize="@dimen/text35" />
+
+</FrameLayout> 
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	 android:layout_marginLeft="25dp">
+	    
+	    
+	     <ImageView
+        android:id="@+id/remainingback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/remaining" 
+        />
+	
+	     <TextView
+    android:id="@+id/remaining"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginLeft="160dp"
+    android:editable="true"
+    android:textColor="@color/black"
+    android:textSize="@dimen/text35"  />
+	    
+</FrameLayout>
 
 
+	</LinearLayout>
+ </FrameLayout>
     
-</LinearLayout>
-
 </LinearLayout>

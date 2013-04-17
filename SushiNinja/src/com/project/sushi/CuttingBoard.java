@@ -41,7 +41,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 	public Drawable[] sushi_images;
 	public TextView scoreboard;
 	public ImageView feedback;
-	public MediaPlayer mpSuccess = MediaPlayer.create(getContext(), R.raw.bladecut);
+	public TextView remaining;
+	public MediaPlayer playSound;
 	public MediaPlayer mpFail = MediaPlayer.create(getContext(), R.raw.miss);
 	
 	private int sushiCut = 10;//for a game over / end screen.
@@ -55,7 +56,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	private int startTi = 5;
 	private Random random = new Random();
-	private Random sushiRand = new Random();
 	Collision col = new Collision(); 
 	boolean checkCollide = false; 
 	boolean addPoint = false; 
@@ -67,8 +67,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 	private Random ingRand = new Random(); //random generator to be used with toBeSpawn
 	private Cuttable currentCuttable; //current object flying
 	
-	//these two probably don't need to be up here
-	private HashMap<String, Integer>currentRecipe; //current recipe, part of recipes ArrayList
+	//this probably don't need to be up here?
 	private ArrayList<Cuttable> toBeSpawn; //array containing missing ingredients for recipes
 
 	public CuttingBoard(Context context) {
@@ -89,7 +88,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 	protected void init(){
 		this.currentCuttable =  new Cuttable("ingredient1");
 		toBeSpawn = new ArrayList<Cuttable>();
-		currentRecipe = new HashMap<String, Integer>();
 		recipes =  new ArrayList<Cuttable>(); 
 		this.setOnTouchListener(this);
 		Resources res = getResources();
@@ -97,9 +95,13 @@ public class CuttingBoard extends View implements OnTouchListener{
 				{res.getDrawable(R.drawable.sushi),res.getDrawable(R.drawable.sushi1), res.getDrawable(R.drawable.sushi2)};
 
 		circle = res.getDrawable(currentCuttable.getImage());
-		
+		if(currentCuttable.getSound() >= 0){
+			playSound = MediaPlayer.create(getContext(), currentCuttable.getSound());
+		}
+	
 		startY = random.nextInt(500)+(getWidth()/2); //getHeight()/2; 
 		startX = getHeight();
+		
 
 		//add in all possible ingredients with 0
 		ingredients.put("ingredient1", 0);
@@ -115,12 +117,12 @@ public class CuttingBoard extends View implements OnTouchListener{
 		recipe1.put("ingredient2",1);
 		
 		HashMap<String, Integer> recipe2 = new HashMap<String, Integer>(); 
-		recipe1.put("rawseaweed",1);
-		recipe1.put("livefish",1);
+		recipe2.put("rawseaweed",1);
+		recipe2.put("livefish",1);
 
 		//add each recipe into recipes
 		recipes.add(new Cuttable("sushi", R.drawable.sushi, recipe1));
-		recipes.add(new Cuttable("gj", R.drawable.goodjob, recipe2));
+		recipes.add(new Cuttable("logo", R.drawable.logo, recipe2));
 	}
 	
 	@SuppressLint("DrawAllocation")
@@ -145,47 +147,51 @@ public class CuttingBoard extends View implements OnTouchListener{
 				checkCollide = false; 
 				if(checkProc){
 				//switch images
-					//if(!currentCuttable.getName().equals("sushi")){
-					//if(true){
-						boolean checkSwitched = currentCuttable.processIngredient(); 
-						if(checkSwitched){
-							circle = res.getDrawable(currentCuttable.getImage());
-							//ingredients.put(currentCuttable.getName(), ingredients.get(currentCuttable.getName()) + 1); 
-							//Why is this getting hit multiple times in one stroke?
-							ingredients.put(currentCuttable.getPrevName(), ingredients.get(currentCuttable.getPrevName()) + 1); 
-							Log.v( Integer.toString(ingredients.get(currentCuttable.getName())), "did ingredients get added to?");
-							Log.v( (currentCuttable.getName()), "did ingredients get added to?");
-							Log.v(Boolean.toString(currentCuttable.needsProcessing()), "needs processing boolean");
-							//Log.v( (currentCuttable.getName()), "currentCuttable Before"); 
-							totalScore += col.getScore(); // user's total score
+					boolean checkSwitched = currentCuttable.processIngredient(); 
+					if(checkSwitched){
+						circle = res.getDrawable(currentCuttable.getImage());
+						//increment ingredients b/c it got hit and processed
+						ingredients.put(currentCuttable.getPrevName(), ingredients.get(currentCuttable.getPrevName()) + 1); 
+						
+						double currentScore = col.getScore();
+						totalScore += currentScore; // user's total score
 							
-							try {
-								List<Integer> scoreList = LeaderBoard.getScoresList();
-								Integer thresholdScore = scoreList.get(4);
-								if (((int) totalScore) > thresholdScore){
+						try {
+							List<Integer> scoreList = LeaderBoard.getScoresList();
+							Integer thresholdScore = scoreList.get(4);
+							if (((int) totalScore) > thresholdScore){
 								scoreList.set(4, ((int) totalScore));
 								LeaderBoard.setScoresList(scoreList);
 								LeaderBoard.saveList(scoreList, LeaderBoard.arrayName, this.getContext());
-								}
-								}
-								catch (Exception e) {
-								Log.v(e.toString(), e.toString());
-								}
-							
-							updateScore();
-							feedback.setVisibility(View.VISIBLE);
-							feedback.setImageResource(R.drawable.goodjob);
-							mpSuccess.start();
-						
-							//sushiCut--;
-							
-							invalidate();
+							}
 						}
-						
-					
-					
+						catch (Exception e) {
+							Log.v(e.toString(), e.toString());
+						}
+						sushiCut--;
+						updateScore();
+							
+						//visual feedback
+						if(currentScore > 0 && currentScore < 900){
+							feedback.setImageResource(R.drawable.nice);
+						}
+						else if(currentScore >= 900 && currentScore < 930){
+							feedback.setImageResource(R.drawable.goodjob);
+						}
+						else if(currentScore >= 930 && currentScore < 960){
+							feedback.setImageResource(R.drawable.excellent);
+						}
+						else if(currentScore >= 960 && currentScore < 990){
+							feedback.setImageResource(R.drawable.amazing);
+						}
+						else if(currentScore >= 990 && currentScore <= 1000){
+							feedback.setImageResource(R.drawable.perfect);
+						}
+						playSound.start();
+
+						invalidate();
+					}
 				}
-				
 				
 			}
 		
@@ -210,30 +216,18 @@ public class CuttingBoard extends View implements OnTouchListener{
 		}
 		
 		
-		//inc +=10; 
-		
-		// Increase the radius a bit
-		//circle.setBounds(startY+incY, startX+incX, startY+50+incY, startX+50+incX);
-		
 		circle.setBounds(startX+incX, startY+incY, startX+offset+incX+50, startY+offset+incY+50);
 		
 		circle.draw(canvas);
 		
-		//Log.v("totalScore = ", Double.toString(totalScore));
 	}	
 	
 	
 	private void regenerateSushi(){
+		//regenerate sushi b/c off screen
 		generateStartingPosition(); 
-				
 		Resources res = getResources();
-		//random.nextInt(150)+(getWidth()/2)-100; //800; //getHeight();
-	
-		
-	
-		//Log.v("startx", Integer.toString(getWidth()));
-		//Log.v("starty", Integer.toString(getHeight()));
-		
+
 		MainActivity.ti = startTi; // reset time to zero
 		incX = 0; // reset everything
 		incY = 0; // reset everything
@@ -243,57 +237,26 @@ public class CuttingBoard extends View implements OnTouchListener{
 			getContext().startActivity(gameOver);
 		}
 		
-		if(checkCollide){
-
-		}
-		else{
-			feedback.setVisibility(View.VISIBLE);
+		if(currentCuttable.needsProcessing()){
 			feedback.setImageResource(R.drawable.tryagain);
 			mpFail.start();
 		}
 		checkCollide = false; 
-		//col.reset(); 
-		int finishedRecipeOld = 0; 
-		int finishedRecipeDiff = 0; 
-		boolean grah = false; 
-		int currentIndex = 0; 
-		currentCuttable = new Cuttable("gj"); 
-		currentRecipe = new HashMap<String, Integer>(); 
-		toBeSpawn = new ArrayList<Cuttable>(); 
+		
+		//check if there's a recipe that has been fulfilled
+		boolean finished = false; //boolean for if there's a recipe finished
 		for (int i = 0; i < recipes.size(); i++){
-			currentRecipe = recipes.get(i).getRecipe(); 
-			currentCuttable = recipes.get(i);
-			currentIndex = i; 
-			Iterator<Entry<String, Integer>> it = (currentRecipe).entrySet().iterator(); 
-			grah = false; 
-			while(it.hasNext()){
-				Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
-				Log.v("pairs ingredient", pairs.getKey());
-				Log.v("pairs value", Integer.toString(pairs.getValue()));
-				if(ingredients.get(pairs.getKey()) < pairs.getValue()){
-					//Log.v("recipe", Integer.toString(i));
-					Log.v("Ingredient name", pairs.getKey());
-					Log.v("ingredient value", Integer.toString(ingredients.get(pairs.getKey())));
-					toBeSpawn.add(new Cuttable(pairs.getKey())); //adds missing recipe peices in 
-					finishedRecipeDiff++; 
-					grah = true; 
+			if(recipes.get(i).checkRecipeMade(ingredients)){
+				circle = res.getDrawable(recipes.get(i).getImage()); //make the next the recipe final product
+				//decrement ingredients by recipe specifications
+				Iterator<Entry<String, Integer>> it = (recipes.get(i)).getRecipe().entrySet().iterator(); 
+				while(it.hasNext()){
+					Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
+					ingredients.put(pairs.getKey(), ingredients.get(pairs.getKey()) - pairs.getValue() );
 				}
-			}
-			if(grah == false){
-				//toBeSpawn.clear(); 
-				//break; 
-			}
-			
-			if(finishedRecipeDiff == finishedRecipeOld){
-				//finished recipe
-				//toBeSpawn.clear(); 
-				Log.v(Integer.toString(toBeSpawn.size()), "To be spawn size in break");
-				Log.v(Integer.toString(i), "recipe");
+				finished = true; 
+				Log.v(recipes.get(i).getName(), "recipeName");
 				break; 
-			}
-			else{
-				finishedRecipeOld = finishedRecipeDiff; 
-				//grah = false; 
 			}
 		}
 		Log.v("ingredient1", Integer.toString(ingredients.get("ingredient1")));
@@ -301,43 +264,21 @@ public class CuttingBoard extends View implements OnTouchListener{
 		Log.v("fish", Integer.toString(ingredients.get("livefish")));
 		Log.v("seaweed", Integer.toString(ingredients.get("rawseaweed")));
 		
-		Log.v(Boolean.toString(grah), "grah");
-		Log.v(Integer.toString(currentIndex), "currentRecipeIndex");
-		/*if(grah == false){
-			
-			toBeSpawn.clear();
-			toBeSpawn = new ArrayList<Cuttable>(); 
-		}*/
-		Log.v(Integer.toString(toBeSpawn.size()), "To be spawn size before size handling");
-		if(toBeSpawn.size() >0){
-			Log.v("Spawn with bias", Integer.toString(toBeSpawn.size()));
-			Log.v("bias towards", toBeSpawn.get(0).getName());
+		if(finished == false){
+			//need to spawn random ingredient to get any recipe made
+			for(int i = 0; i < recipes.size(); i++){
+				toBeSpawn.addAll(recipes.get(i).getMissingIng(ingredients));
+			}
 			int randomIngredient = ingRand.nextInt(toBeSpawn.size());
 			currentCuttable = toBeSpawn.get((randomIngredient));
 			circle = res.getDrawable(toBeSpawn.get((randomIngredient)).getImage());
+			if(currentCuttable.getSound() >= 0){
+				playSound = MediaPlayer.create(getContext(), currentCuttable.getSound());
+			}
 			toBeSpawn = new ArrayList<Cuttable>(); 
 		}
-		else {
-			circle = res.getDrawable(currentCuttable.getImage());
-			Log.v("Spawn real sushi", currentCuttable.getName());
-			Iterator<Entry<String, Integer>> it = (currentRecipe).entrySet().iterator(); 
-			while(it.hasNext()){
-				Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
-				ingredients.put(pairs.getKey(), ingredients.get(pairs.getKey()) - pairs.getValue() );
-				//ingredients.put("ingredient1", ingredients.get("ingredient1") - 1 );
-			}
-		}
-		
 		Log.v( currentCuttable.getName(), "currentCuttable After");
-		
-		
-		//circle = sushi_images[sushiRand.nextInt(3)];
-    
-	
-	
-		//Log.v("totalScore = ", Double.toString(totalScore));
-	
-		//pdrawn.clear();
+
 		invalidate(); 
 	}
 	
@@ -475,9 +416,16 @@ public class CuttingBoard extends View implements OnTouchListener{
 			offset -= 50;
 		}
 	}
+	
+	public void setText(){
+		scoreboard.setText(Double.toString(totalScore));
+		remaining.setText(Integer.toString(sushiCut));
+		
+	}
 	public void updateScore(){
 		if(scoreboard != null){
-			scoreboard.setText("Total Score: " + totalScore + "\t Remaining Sushi: " + sushiCut);
+			scoreboard.setText(Double.toString(totalScore)); //+ "\t Remaining Sushi: " + sushiCut);
+			remaining.setText(Integer.toString(sushiCut));
 		}
 	}
 	
