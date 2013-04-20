@@ -10,7 +10,9 @@ import java.util.Stack;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -45,14 +47,16 @@ public class CuttingBoard extends View implements OnTouchListener{
 	public MediaPlayer playSound;
 	public MediaPlayer mpFail = MediaPlayer.create(getContext(), R.raw.miss);
 	
-	private int sushiCut = 10;//for a game over / end screen.
+	//parameters to manipulate between levels
+	private int currentLevel = 1;
+	private int sushiSliced = 10;//for a game over / end screen.
+	private int sushiDropped = 0;
+	private int offset = 150;
 	
 	private int startY = 0;
 	private int startX = 0;
 	private int incX = 0; 
 	private int incY = 0; 
-	
-	protected static int offset = 75;
 	
 	private int startTi = 5;
 	private Random random = new Random();
@@ -168,8 +172,28 @@ public class CuttingBoard extends View implements OnTouchListener{
 						catch (Exception e) {
 							Log.v(e.toString(), e.toString());
 						}
-						sushiCut--;
+						sushiSliced--;
 						updateScore();
+						
+						if(sushiSliced == 0){
+
+							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+							// set dialog message
+							alertDialogBuilder
+									.setCancelable(false)
+									.setPositiveButton("Next Round!",
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog, int id) {
+													nextLevel();
+												}
+											});
+							
+							AlertDialog alertDialog = alertDialogBuilder.create();
+							
+							alertDialog.show();
+					
+						}
 							
 						//visual feedback
 						if(currentScore > 0 && currentScore < 900){
@@ -232,12 +256,13 @@ public class CuttingBoard extends View implements OnTouchListener{
 		incX = 0; // reset everything
 		incY = 0; // reset everything
 		
-		if(sushiCut == 0){
+		if(currentLevel > 1 && sushiDropped == 0){
 			Intent gameOver = new Intent (getContext(), GameOver.class);
 			getContext().startActivity(gameOver);
 		}
 		
 		if(currentCuttable.needsProcessing()){
+			sushiDropped--;
 			feedback.setImageResource(R.drawable.tryagain);
 			mpFail.start();
 		}
@@ -419,15 +444,50 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	public void setText(){
 		scoreboard.setText(Double.toString(totalScore));
-		remaining.setText(Integer.toString(sushiCut));
+		if(currentLevel > 1){
+		remaining.setText(Integer.toString(sushiSliced)+  " Dropped:" + Integer.toString(sushiDropped));
+		}
+		else{
+		remaining.setText(Integer.toString(sushiSliced));
+		}
 		
 	}
 	public void updateScore(){
 		if(scoreboard != null){
-			scoreboard.setText(Double.toString(totalScore)); //+ "\t Remaining Sushi: " + sushiCut);
-			remaining.setText(Integer.toString(sushiCut));
+			scoreboard.setText(Double.toString(totalScore)); //+ "\t Remaining Sushi: " + sushiSliced);
+			remaining.setText(Integer.toString(sushiSliced));
 		}
 	}
 	
+	public boolean isWin(){
+		return sushiSliced == 0;	
+	}
+	
+	public boolean isLoss(){
+		return (sushiDropped == 0 && currentLevel > 1);
+	}
+	
+	public void nextLevel(){
+		if(currentLevel == 1){
+			sushiSliced = 10;
+			sushiDropped = 10;
+		} else{
+			sushiSliced = 10 + 2*(currentLevel-2);
+			sushiDropped = 10 - (currentLevel-1);
+			offset -= 10;
+			MainActivity.Vy -= 10;
+		}
+		currentLevel++;
+	}
+	
+	//TO BE FURTHER TESTED
+	public void initialize(){
+		MainActivity.Vy = -(getHeight()/25 + random.nextInt((getHeight()/50)+1)); // reset to default value
+		MainActivity.Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
+		startX = random.nextInt(500)+(getWidth()/2);
+		startY = getHeight();
+		incX = 0;
+		incY = 0;
+	}
 
 }

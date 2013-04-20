@@ -9,25 +9,27 @@ import android.widget.Button;
 public class GameOver extends Activity {
 
 	Button restart, exit;
+	MusicPlayer mp = new MusicPlayer(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.end);
+		mp.play(R.raw.blackbutterflyending);
 
 	}
 
 	public void onRestartClick(View v) {
-		
-		Intent intent = new Intent(this, MainMenu.class);
+		mp.stopMusic();
 		finish();
+		Intent intent = new Intent(this, MainMenu.class);
 		startActivity(intent);
 
 	}
 
 	public void onEndClick(View v) {
-		//finish();
-		System.exit(0);
+		mp.stopMusic();
+		finish();
 
 	}
 	

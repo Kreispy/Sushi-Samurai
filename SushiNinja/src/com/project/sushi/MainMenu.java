@@ -19,7 +19,7 @@ public class MainMenu extends Activity {
 
 	Button button;
 	Button scorebutton;
-	MediaPlayer intro;
+	MusicPlayer mp = new MusicPlayer(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,8 +27,7 @@ public class MainMenu extends Activity {
 		setContentView(R.layout.start);
 		addListenerOnButton();
 		RunAnimations();
-		intro = MediaPlayer.create(this, R.raw.blackbutterfly);
-		intro.start();
+		mp.play(R.raw.sushininjaopening);
 	}
 
 	public void addListenerOnButton() {

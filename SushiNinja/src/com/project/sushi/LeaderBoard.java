@@ -33,6 +33,7 @@ public class LeaderBoard extends Activity{
 	TextView myText;
 	SharedPreferences settings;
 	static List<Integer> scoresList;
+	MusicPlayer mp = new MusicPlayer(this);
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class LeaderBoard extends Activity{
  
 			@Override
 			public void onClick(View arg0) {
- 
+				mp.stopMusic();
 			    Intent intent = new Intent(context, MainMenu.class);
 			    finish();
 			    			startActivity(intent);   

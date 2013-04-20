@@ -14,12 +14,14 @@ public class Options extends Activity {
  
 	Button button;
 	Button backbutton;
+	MusicPlayer mp = new MusicPlayer(this);
  
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
 		addListenerOnButton();
+		
 	}
 
 	
@@ -33,7 +35,7 @@ public class Options extends Activity {
  
 			@Override
 			public void onClick(View arg0) {
- 
+				mp.stopMusic();
 			    Intent intent = new Intent(context, MainActivity.class);
 			    finish();
 			    			startActivity(intent);   
@@ -48,7 +50,7 @@ public class Options extends Activity {
  
 			@Override
 			public void onClick(View arg0) {
- 
+				mp.stopMusic();
 			    Intent intent = new Intent(context, MainMenu.class);
 			    finish();
 			    			startActivity(intent);   
