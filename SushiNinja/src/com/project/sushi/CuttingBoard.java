@@ -11,7 +11,7 @@ import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -258,24 +259,39 @@ public class CuttingBoard extends View implements OnTouchListener{
 		if(isWin()){
 
 			MainActivity.setIsPaused(true);
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-
-			// set dialog message
-			alertDialogBuilder
-					.setCancelable(false)
-					.setPositiveButton("Next Round!",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									MainActivity.setIsPaused(false);
-									nextLevel();
-									regenerateSushi();
-								}
-							});
 			
-			AlertDialog alertDialog = alertDialogBuilder.create();
+			final Dialog dialog = new Dialog(getContext());
+			dialog.setContentView(R.layout.dialog);
+			dialog.setTitle("Level " + currentLevel + "completed!");
 			
-			alertDialog.show();
-	
+			TextView text = (TextView) dialog.findViewById(R.id.text);
+			
+			// Not sure about this???
+			int TotalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getContext());
+			int SushiGenerated = LeaderBoard.loadTotalInt("TOTAL_SUSHI_GENERATED", this.getContext());
+			int totalTime = LeaderBoard.loadRecentInt("TOTAL_PLAYTIME", this.getContext());
+			
+			text.setText(
+					"Current Score:" + totalScore + "\n" +
+					"Recipes Made:" + recipesMade + "\n	" +
+					"Total Cut:" + TotalCut + "\n" +
+					"Total Dropped:" + sushiDroppedTotal +"\n"+
+					"Total Time:" + totalTime + "\n"
+					);
+		
+			Button nextLevel = (Button) dialog.findViewById(R.id.OKbutton);
+			// if button is clicked, close the custom dialog
+			nextLevel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					MainActivity.setIsPaused(false);
+					nextLevel();
+					regenerateSushi();
+				}
+			});
+ 
+			dialog.show();
 		}
 	}
 	

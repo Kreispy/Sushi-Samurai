@@ -20,12 +20,12 @@
         android:layout_width="500dp"
         android:layout_height="500dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="35dp"
-        android:background="@drawable/leaderboard"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/statsbg"
         android:gravity="center"
-        android:lineSpacingExtra ="40dp"
-        android:textSize="@dimen/text25"
+        android:lineSpacingExtra="5dp"
+        android:textColor="#400"
+        android:textSize="@dimen/text15"
         android:typeface="sans" />
 
     </RelativeLayout>

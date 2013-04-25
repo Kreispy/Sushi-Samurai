@@ -77,15 +77,19 @@ public class StatBoard extends Activity{
 			averagePercent = 0;
 		}
 		
-		displayString += "TS: " + totalScore + " , AS: " 
-				+ averageScore + " , MRS: " + recentScore + "\n";
-		displayString += "TSC: " + totalCut + " , ASC: " 
-				+ averageCut + " , MRSC: " + recentCut + "\n";
-		displayString += "TSG: " + totalGenerated + " , ASG: " 
-				+ averageGenerated + " , MRG: " + recentGenerated + "\n";
+		displayString += "Total Score: " + totalScore + "\n"
+		+ "Average Score: " + averageScore + "\n" 
+		+ "Recent Score: " + recentScore + "\n";
+		displayString += "Total Cut: " + totalCut + "\n" + 
+		"Average Cut: " + averageCut + "\n" +
+		"Recent Cut: " + recentCut + "\n";
+		displayString += "Total Generated: " + totalGenerated + "\n" +
+		"Average Generated: " + averageGenerated + "\n" + "" +
+		"Recent Generated: " + recentGenerated + "\n";
 		// displayString += "TP: " + totalPlaytime + " , AP: " 
 		// 		+ averagePlaytime + " , MRP: " + recentPlaytime + "\n";
-		displayString += "AA: " + averagePercent + "%" + " , MRA: " + recentPercent + "%";
+		displayString += "Average Percent: " + averagePercent + "%" + "\n"
+		+ "Recent Percent: " + recentPercent + "%" + "\n";
 		displayString += "Sessions Played: " + totalSessions;
 		
 		myText.setText(displayString);

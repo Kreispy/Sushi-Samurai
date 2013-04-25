@@ -36,6 +36,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="20dp"
         android:layout_marginTop="202dp"
-        android:text="Statistics" />
+        android:background = "@drawable/statsbutton" />
 
     </RelativeLayout>
