@@ -1,0 +1,110 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (javaClasses.cpp:129), pid=9260, tid=6044
+#  fatal error: Invalid layout of preloaded class
+#
+# JRE version: 7.0_07-b10
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (23.3-b01 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000000231d800):  JavaThread "Unknown thread" [_thread_in_vm, id=6044, stack(0x0000000002660000,0x0000000002760000)]
+
+Stack: [0x0000000002660000,0x0000000002760000]
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x000000000231d800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=6044, stack(0x0000000002660000,0x0000000002760000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.014 loading class 0x00000000021d9ad0 done
+Event: 0.014 loading class 0x0000000002193590 done
+Event: 0.014 loading class 0x0000000002193560
+Event: 0.014 loading class 0x00000000021e4ec0
+Event: 0.015 loading class 0x00000000021e4ec0 done
+Event: 0.015 loading class 0x00000000021e4f00
+Event: 0.015 loading class 0x00000000021e4f00 done
+Event: 0.015 loading class 0x000000000bdbb7c0
+Event: 0.015 loading class 0x000000000bdbb7c0 done
+Event: 0.015 loading class 0x0000000002193560 done
+
+
+Dynamic libraries:
+0x000000013f690000 - 0x000000013f6c4000 	C:\Program Files\Java\jre7\bin\javaw.exe
+0x0000000077960000 - 0x0000000077b09000 	C:\windows\SYSTEM32\ntdll.dll
+0x0000000077840000 - 0x000000007795f000 	C:\windows\system32\kernel32.dll
+0x000007fefe000000 - 0x000007fefe06b000 	C:\windows\system32\KERNELBASE.dll
+0x000007fefe1a0000 - 0x000007fefe27b000 	C:\windows\system32\ADVAPI32.dll
+0x000007feff800000 - 0x000007feff89f000 	C:\windows\system32\msvcrt.dll
+0x000007fefe290000 - 0x000007fefe2af000 	C:\windows\SYSTEM32\sechost.dll
+0x000007fefe6a0000 - 0x000007fefe7cd000 	C:\windows\system32\RPCRT4.dll
+0x0000000077740000 - 0x000000007783a000 	C:\windows\system32\USER32.dll
+0x000007fefe5b0000 - 0x000007fefe617000 	C:\windows\system32\GDI32.dll
+0x000007fefe280000 - 0x000007fefe28e000 	C:\windows\system32\LPK.dll
+0x000007fefe870000 - 0x000007fefe939000 	C:\windows\system32\USP10.dll
+0x000007fefcf20000 - 0x000007fefd114000 	C:\windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.17514_none_fa396087175ac9ac\COMCTL32.dll
+0x000007feff980000 - 0x000007feff9f1000 	C:\windows\system32\SHLWAPI.dll
+0x000007fefe620000 - 0x000007fefe64e000 	C:\windows\system32\IMM32.DLL
+0x000007fefe960000 - 0x000007fefea69000 	C:\windows\system32\MSCTF.dll
+0x000000006be40000 - 0x000000006bf11000 	C:\Program Files\Java\jre7\bin\msvcr100.dll
+0x0000000053270000 - 0x000000005398f000 	C:\Program Files\Java\jre7\bin\server\jvm.dll
+0x000007fef9b20000 - 0x000007fef9b29000 	C:\windows\system32\WSOCK32.dll
+0x000007fefe650000 - 0x000007fefe69d000 	C:\windows\system32\WS2_32.dll
+0x000007fefe190000 - 0x000007fefe198000 	C:\windows\system32\NSI.dll
+0x000007fefb810000 - 0x000007fefb84b000 	C:\windows\system32\WINMM.dll
+0x0000000077b20000 - 0x0000000077b27000 	C:\windows\system32\PSAPI.DLL
+0x00000000730b0000 - 0x00000000730bf000 	C:\Program Files\Java\jre7\bin\verify.dll
+0x0000000070870000 - 0x0000000070898000 	C:\Program Files\Java\jre7\bin\java.dll
+0x0000000072fc0000 - 0x0000000072fd5000 	C:\Program Files\Java\jre7\bin\zip.dll
+
+VM Arguments:
+jvm_args: -Dnet.sourceforge.cobertura.datafile=C:\Users\root\Documents\CIS350\WorkInProgress-KZ_04_23\WorkInProgress-master\.metadata\.plugins\ecobertura.core\cobertura\cobertura.ser -Dfile.encoding=Cp1252 -Xbootclasspath:C:\Users\root\Downloads\adt-bundle-windows-x86_64\adt-bundle-windows-x86_64\sdk\platforms\android-17\android.jar;C:\Users\root\Downloads\adt-bundle-windows-x86_64\adt-bundle-windows-x86_64\eclipse\configuration\org.eclipse.osgi\bundles\276\1\.cp\cobertura.jar 
+java_command: org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 56990 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -testNameFile C:\Users\root\AppData\Local\Temp\testNames1197018727894742117.txt
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.7.0_07\bin
+JRE_HOME=C:\Program Files\Java\jre7\bin
+PATH=C:\Perl64\site\bin;C:\Perl64\bin;c:\Qt\4.8.0\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Lenovo\Bluetooth Software\;C:\Program Files\Lenovo\Bluetooth Software\syswow64;C:\Program Files (x86)\Windows Live\Shared;c:\Program Files (x86)\Autodesk\Backburner\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Java\jdk1.7.0_07\bin
+USERNAME=root
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 8 (4 cores per cpu, 2 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, ht, tsc, tscinvbit
+
+Memory: 4k page, physical 8300720k(3441220k free), swap 16599584k(10144940k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (23.3-b01) for windows-amd64 JRE (1.7.0_07-b10), built on Aug 28 2012 18:28:27 by "java_re" with unknown MS VC++:1600
+
+time: Thu Apr 25 00:48:57 2013
+elapsed time: 0 seconds
+

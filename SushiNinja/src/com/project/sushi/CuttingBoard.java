@@ -10,6 +10,7 @@ import java.util.Stack;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,7 +50,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	//parameters to manipulate between levels
 	private int currentLevel = 1;
-	private int sushiSliced = 10;//for a game over / end screen.
+	private int sushiSliced = 0;//for a game over / end screen.
 	private int sushiDropped = 0;
 	private int offset = 150;
 	
@@ -64,12 +65,28 @@ public class CuttingBoard extends View implements OnTouchListener{
 	boolean checkCollide = false; 
 	boolean addPoint = false; 
 	boolean left = true;
+	boolean gameOver = false;
+	
+	private int sushiGeneratedStat = 0;
+	private int sushiSlicedStat = 0; 
 	
 	public double totalScore; 
 	private HashMap<String, Integer> ingredients = new HashMap<String, Integer>(); //contains what you have cut and haven't changed into recipes
 	private ArrayList<Cuttable> recipes ;  //recipes for sushi
 	private Random ingRand = new Random(); //random generator to be used with toBeSpawn
 	private Cuttable currentCuttable; //current object flying
+
+	
+	private int sushiDroppedTotal; 
+	int Vx = 0;
+	int Vy = 0; 
+	
+	boolean first = true; 
+	boolean positiveRecipe = false; 
+	
+	
+	private int recipesMadeGoal; 
+	private int recipesMade = 0; 
 	
 	//this probably don't need to be up here?
 	private ArrayList<Cuttable> toBeSpawn; //array containing missing ingredients for recipes
@@ -106,7 +123,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 		startY = random.nextInt(500)+(getWidth()/2); //getHeight()/2; 
 		startX = getHeight();
 		
-
+		recipesMadeGoal = 2;
+		sushiDroppedTotal = 0;
 		//add in all possible ingredients with 0
 		ingredients.put("ingredient1", 0);
 		ingredients.put("ingredient2", 0);
@@ -127,10 +145,17 @@ public class CuttingBoard extends View implements OnTouchListener{
 		//add each recipe into recipes
 		recipes.add(new Cuttable("sushi", R.drawable.sushi, recipe1));
 		recipes.add(new Cuttable("logo", R.drawable.logo, recipe2));
+		
+		// TODO: Update number of levels
 	}
 	
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas){
+		if(first){
+			generateStartingPosition();
+			first = false; 
+		}
+		
 		//Check for collisions
 		if(pdrawn.size() >=2 && addPoint){
 			//if(!pdrawn.get(pdrawn.size()-1).getFirst() && !pdrawn.get(pdrawn.size()-2).getFirst()){
@@ -148,52 +173,24 @@ public class CuttingBoard extends View implements OnTouchListener{
 			Log.v("ingredient2", Integer.toString(ingredients.get("ingredient2")));
 			boolean checkProc = currentCuttable.needsProcessing(); 
 			if(checkCollide){
-				checkCollide = false; 
+				//checkCollide = false;
+				
 				if(checkProc){
 				//switch images
 					boolean checkSwitched = currentCuttable.processIngredient(); 
 					if(checkSwitched){
+						sushiSlicedStat++;
 						circle = res.getDrawable(currentCuttable.getImage());
 						//increment ingredients b/c it got hit and processed
 						ingredients.put(currentCuttable.getPrevName(), ingredients.get(currentCuttable.getPrevName()) + 1); 
 						
 						double currentScore = col.getScore();
 						totalScore += currentScore; // user's total score
-							
-						try {
-							List<Integer> scoreList = LeaderBoard.getScoresList();
-							Integer thresholdScore = scoreList.get(4);
-							if (((int) totalScore) > thresholdScore){
-								scoreList.set(4, ((int) totalScore));
-								LeaderBoard.setScoresList(scoreList);
-								LeaderBoard.saveList(scoreList, LeaderBoard.arrayName, this.getContext());
-							}
-						}
-						catch (Exception e) {
-							Log.v(e.toString(), e.toString());
-						}
-						sushiSliced--;
+						
+						sushiSliced++;
 						updateScore();
 						
-						if(sushiSliced == 0){
-
-							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-
-							// set dialog message
-							alertDialogBuilder
-									.setCancelable(false)
-									.setPositiveButton("Next Round!",
-											new DialogInterface.OnClickListener() {
-												public void onClick(DialogInterface dialog, int id) {
-													nextLevel();
-												}
-											});
-							
-							AlertDialog alertDialog = alertDialogBuilder.create();
-							
-							alertDialog.show();
-					
-						}
+						handleCheckNextLevel();
 							
 						//visual feedback
 						if(currentScore > 0 && currentScore < 900){
@@ -216,11 +213,21 @@ public class CuttingBoard extends View implements OnTouchListener{
 						invalidate();
 					}
 				}
+				if(currentCuttable.hasRecipe()){
 				
+					Log.v(currentCuttable.getName(), "entered has recipe collision");
+
+					//recipesMade--; 
+					
+					regenerateSushi(); 
+					handleCheckNextLevel(); 
+				}
+				checkCollide = false;
 			}
 		
 			else if(startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 ){
 				//off screen
+				handleCheckNextLevel();
 				regenerateSushi(); 
 			}
 		}
@@ -247,32 +254,121 @@ public class CuttingBoard extends View implements OnTouchListener{
 	}	
 	
 	
+	private void handleCheckNextLevel(){
+		if(isWin()){
+
+			MainActivity.setIsPaused(true);
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+			// set dialog message
+			alertDialogBuilder
+					.setCancelable(false)
+					.setPositiveButton("Next Round!",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									MainActivity.setIsPaused(false);
+									nextLevel();
+									regenerateSushi();
+								}
+							});
+			
+			AlertDialog alertDialog = alertDialogBuilder.create();
+			
+			alertDialog.show();
+	
+		}
+	}
+	
 	private void regenerateSushi(){
 		//regenerate sushi b/c off screen
 		generateStartingPosition(); 
 		Resources res = getResources();
-
+		sushiGeneratedStat++;
 		MainActivity.ti = startTi; // reset time to zero
 		incX = 0; // reset everything
 		incY = 0; // reset everything
 		
-		if(currentLevel > 1 && sushiDropped == 0){
+		if(currentCuttable.hasRecipe() && checkCollide){
+			
+			recipesMade--; 
+			checkCollide = false; 
+			Log.v(Integer.toString(recipesMade), "hit a recipe");
+			handleCheckNextLevel();
+		}
+		
+		if(currentLevel > 1 && isLoss()){
+			// TODO: Game Over
+			LeaderBoard.saveRecentInt("RECENT_PLAYTIME", this.getContext(), MainActivity.totalMillisecondTime);
+			
+			// Update Total Playtime
+	        int totalTime = LeaderBoard.loadRecentInt("TOTAL_PLAYTIME", this.getContext());
+	        LeaderBoard.saveRecentInt("TOTAL_PLAYTIME", this.getContext(), totalTime + MainActivity.totalMillisecondTime);
+	        
 			Intent gameOver = new Intent (getContext(), GameOver.class);
 			getContext().startActivity(gameOver);
+			
+			
+			// Update Pieces of Sushi Cut
+			LeaderBoard.saveRecentInt("RECENT_SUSHI_CUT", this.getContext(), sushiSlicedStat);
+			
+			int runningTotalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getContext());
+			LeaderBoard.saveTotalInt("TOTAL_SUSHI_CUT", 
+					this.getContext(), (runningTotalCut + sushiSlicedStat));
+			
+			
+			// TODO: Update sushi generated cut
+			LeaderBoard.saveRecentInt("RECENT_SUSHI_GENERATED", this.getContext(), sushiGeneratedStat);
+			
+			int runningSushiGenerated = LeaderBoard.loadTotalInt("TOTAL_SUSHI_GENERATED", this.getContext());
+			LeaderBoard.saveTotalInt("TOTAL_SUSHI_GENERATED", 
+					this.getContext(), (runningSushiGenerated + sushiGeneratedStat));
+			
+			// Update Recent Score
+			LeaderBoard.saveRecentInt("RECENT_SCORE", this.getContext(), ((int) totalScore));
+			
+			// Update Cumulative Total Score
+			int runningTotalScore = LeaderBoard.loadTotalInt("TOTAL_SCORE", this.getContext());
+			LeaderBoard.saveTotalInt("TOTAL_SCORE", 
+					this.getContext(), (runningTotalScore + ((int) totalScore)));
+			
+			// Check High Score
+			try {
+				List<Integer> scoreList = LeaderBoard.getScoresList();
+				Integer thresholdScore = scoreList.get(4);
+				if (((int) totalScore) > thresholdScore){
+					scoreList.set(4, ((int) totalScore));
+					LeaderBoard.setScoresList(scoreList);
+					LeaderBoard.saveList(scoreList, LeaderBoard.arrayName, this.getContext());
+				}
+			}
+			catch (Exception e) {
+				Log.v(e.toString(), e.toString());
+			}
 		}
 		
 		if(currentCuttable.needsProcessing()){
-			sushiDropped--;
+			sushiDropped++;
+			sushiDroppedTotal++; 
+			if(sushiDropped % 3 ==0 && recipesMade >0){
+				sushiDropped = 0; 
+				recipesMade--; 
+			}
+			Log.v(Integer.toString(sushiDropped), "sushi dropped recipesMade sushiDropped");
+			Log.v(Integer.toString(recipesMade), "sushi dropped recipesMade");
 			feedback.setImageResource(R.drawable.tryagain);
 			mpFail.start();
+			handleCheckNextLevel();
 		}
 		checkCollide = false; 
-		
+		int stopped = 0; 
 		//check if there's a recipe that has been fulfilled
 		boolean finished = false; //boolean for if there's a recipe finished
 		for (int i = 0; i < recipes.size(); i++){
 			if(recipes.get(i).checkRecipeMade(ingredients)){
 				circle = res.getDrawable(recipes.get(i).getImage()); //make the next the recipe final product
+				currentCuttable = recipes.get(i);
+				Log.v(Boolean.toString(currentCuttable.hasRecipe()), "has recipe");
+				stopped = i; 
 				//decrement ingredients by recipe specifications
 				Iterator<Entry<String, Integer>> it = (recipes.get(i)).getRecipe().entrySet().iterator(); 
 				while(it.hasNext()){
@@ -281,14 +377,18 @@ public class CuttingBoard extends View implements OnTouchListener{
 				}
 				finished = true; 
 				Log.v(recipes.get(i).getName(), "recipeName");
+				recipesMade++; 
+				if(recipesMade > 0){
+					positiveRecipe = true; 
+				}
 				break; 
 			}
 		}
-		Log.v("ingredient1", Integer.toString(ingredients.get("ingredient1")));
+		/*Log.v("ingredient1", Integer.toString(ingredients.get("ingredient1")));
 		Log.v("ingredient2", Integer.toString(ingredients.get("ingredient2")));
 		Log.v("fish", Integer.toString(ingredients.get("livefish")));
 		Log.v("seaweed", Integer.toString(ingredients.get("rawseaweed")));
-		
+		*/
 		if(finished == false){
 			//need to spawn random ingredient to get any recipe made
 			for(int i = 0; i < recipes.size(); i++){
@@ -302,51 +402,76 @@ public class CuttingBoard extends View implements OnTouchListener{
 			}
 			toBeSpawn = new ArrayList<Cuttable>(); 
 		}
-		Log.v( currentCuttable.getName(), "currentCuttable After");
 
 		invalidate(); 
 	}
 	
 	private void generateStartingPosition(){
 		int yGeneration = random.nextInt(3);
-		MainActivity.Vy = -(getHeight()/25 + random.nextInt((getHeight()/50)+1)); // reset to default value
-		MainActivity.Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
+		//int yGeneration = 0; 
 		switch (yGeneration){
 			case 0:
+				Vy = -(getHeight()/28 + random.nextInt((getHeight()/60)+1)); // reset to default value
+				Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
 				startY = getHeight();
 				if(random.nextBoolean()){
+					
 					left = true;
 					//startX = random.nextInt(getWidth()/4);
-					startX = random.nextInt(getWidth());
+					//startX = random.nextInt(getWidth());
+					startX = random.nextInt(getWidth()) / 2;
 				}
 				else{
 					left = false;
 					//startX = getWidth() - random.nextInt(getWidth()/4);
-					startX = getWidth() - random.nextInt(getWidth());
+					//startX = getWidth() - random.nextInt(getWidth());
+					startX = random.nextInt(getWidth()) / 2 + getWidth() / 2;
 				}
 				
 				break; 
 			case 1:
 				left = true;
-				startY = random.nextInt(2*getHeight()/4) + getHeight()/4;
+				startY = random.nextInt(1*getHeight()/3) + (int)(1*getHeight()/3);
+				//startY = random.nextInt(3*getHeight()/5) + (int)(1*getHeight()/5);
 				startX = 0; 
-				generateVyFromWalls();
+				generateVFromWalls();
 				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
 				break;
 			case 2:
 				left = false; 
-				startY = random.nextInt(2*getHeight()/4) + getHeight()/4;
+				startY = random.nextInt(1*getHeight()/3) + (int)(1*getHeight()/3);
+				//startY = random.nextInt(3*getHeight()/5) + (int)(1.25*getHeight()/5);
 				startX = getWidth(); 
-				generateVyFromWalls();
+				generateVFromWalls();
 				//MainActivity.Vy = -1 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1)); 
 				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
 				break;
 		}
+		/*Log.v("Start x: ", Double.toString(startX));
+		Log.v("Start y: ", Double.toString(startY));
+		Log.v("V x: ", Double.toString(Vx));
+		Log.v("V y: ", Double.toString(Vy));
+		Log.v(Double.toString(getWidth()), "total width");
+		Log.v(Double.toString(getHeight()), "total height");
+		Log.v(Double.toString(startY), "starty");*/
+		if(left){
+			Vx *= -1;
+		}
+		//MainActivity.setVx(Vx);
+		//MainActivity.setVy(Vy);
+		//incY = Vy; 
+		//startY = 500;
 	}
 	
-	private void generateVyFromWalls(){
-		MainActivity.Vy = -1 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )); 
-		double vsquared = MainActivity.Vy*MainActivity.Vy + MainActivity.Vx*MainActivity.Vx;
+	private void generateVFromWalls(){
+		Log.v("Generate from wall:", "true");
+		//MainActivity.setVy(-1/12 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )) - getHeight()/40);
+		
+		//MainActivity.setVx(-(getWidth()/200 + random.nextInt((getWidth()/220)+1)));
+        Vy = (-1/12 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )) - getHeight()/40);
+		
+		Vx = (-(getWidth()/200 + random.nextInt((getWidth()/220)+1)));
+		/*double vsquared = MainActivity.Vy*MainActivity.Vy + MainActivity.Vx*MainActivity.Vx;
 		double range = vsquared;
 		double angle = 90; 
 		if(MainActivity.Vx < 0){
@@ -364,12 +489,12 @@ public class CuttingBoard extends View implements OnTouchListener{
 		Log.v("V 2: ", Double.toString(vsquared));
 		Log.v("angle: ", Double.toString(angle));
 		*/
-		if (range < 100){
+		/*(if (range < 100){
 			
 			//Log.v("max x: ", Double.toString(getWidth()));
 			//Log.v("max y: ", Double.toString(getHeight()));
 			generateVyFromWalls();
-		}
+		}*/
 	}
 	
 	public boolean onTouch(View view, MotionEvent event){
@@ -429,6 +554,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 		incY += value;
 	}
 	
+	
+	
 	public boolean isLeft(){
 		return left;
 	}
@@ -445,7 +572,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 	public void setText(){
 		scoreboard.setText(Double.toString(totalScore));
 		if(currentLevel > 1){
-		remaining.setText(Integer.toString(sushiSliced)+  " Dropped:" + Integer.toString(sushiDropped));
+		//remaining.setText(Integer.toString(sushiSliced)+  " Dropped:" + Integer.toString(sushiDropped));
+			remaining.setText(Integer.toString(sushiSliced)+  " Recipes made:" + Integer.toString(recipesMade));
 		}
 		else{
 		remaining.setText(Integer.toString(sushiSliced));
@@ -460,28 +588,54 @@ public class CuttingBoard extends View implements OnTouchListener{
 	}
 	
 	public boolean isWin(){
-		return sushiSliced == 0;	
+		//return sushiSliced == 0;	
+		if(currentLevel > 1){
+			return (recipesMade >= this.recipesMadeGoal);
+		}
+		else{
+			return (sushiSliced >5);
+		}
 	}
 	
 	public boolean isLoss(){
-		return (sushiDropped == 0 && currentLevel > 1);
+		return (this.positiveRecipe == true && recipesMade == 0 && currentLevel > 1);
 	}
 	
 	public void nextLevel(){
-		if(currentLevel == 1){
-			sushiSliced = 10;
-			sushiDropped = 10;
-		} else{
-			sushiSliced = 10 + 2*(currentLevel-2);
-			sushiDropped = 10 - (currentLevel-1);
-			offset -= 10;
-			MainActivity.Vy -= 10;
-		}
+		/*if(currentLevel == 1){
+			sushiSliced = 0;
+			sushiDropped = 0;
+		} else*/
+
+			//sushiSliced = 10 + 2*(currentLevel-2);
+			//sushiDropped = 10 - (currentLevel-1);
+			recipesMade = 0; 
+			sushiDropped = 0; 
+			if(offset > 18){
+				offset -= 10;
+			}
+			Vy -= 10;
+			positiveRecipe = false; 
+			recipesMadeGoal = currentLevel+1; 
+			Iterator<Entry<String, Integer>> it = ingredients.entrySet().iterator(); 
+			while(it.hasNext()){
+				Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
+				ingredients.put(pairs.getKey(), 0 );
+			}
+			//MainActivity.setVy(Vy);
+
 		currentLevel++;
 	}
 	
+	public void move(){
+		incY += Vy;
+		Vy += 1; 
+		incX += Vx; 
+		//invalidate(); 
+	}
+	
 	//TO BE FURTHER TESTED
-	public void initialize(){
+	/*public void initialize(){
 		MainActivity.Vy = -(getHeight()/25 + random.nextInt((getHeight()/50)+1)); // reset to default value
 		MainActivity.Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
 		startX = random.nextInt(500)+(getWidth()/2);
@@ -489,5 +643,5 @@ public class CuttingBoard extends View implements OnTouchListener{
 		incX = 0;
 		incY = 0;
 	}
-
+*/
 }

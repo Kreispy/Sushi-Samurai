@@ -28,6 +28,7 @@ import com.project.sushi.R;
 public class LeaderBoard extends Activity{
 	
 	Button button;
+	Button statsButton;
 	static String PREFERENCE_KEY = "user_score_string";
 	static String arrayName = "high_score_array";
 	TextView myText;
@@ -94,16 +95,39 @@ public class LeaderBoard extends Activity{
 	    return editor.commit();  
 	}
 	
-	
 	public List<Integer> loadList(String arrayName, Context mContext) {  
 	    SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    int size = prefs.getInt(arrayName + "_size", 5);  
 	    List<Integer> list = new ArrayList<Integer>();  
 	    for(int i = 0; i < size; i++)  
-	        list.add(prefs.getInt(arrayName + "_" + i, 0)); // returns -1 if cannot be found
+	        list.add(prefs.getInt(arrayName + "_" + i, 0)); // returns 0 if cannot be found
 	    Collections.sort(list);
 	    Collections.reverse(list); // reverse for greatest to least
 	    return list;  
+	}
+	
+	public static boolean saveRecentInt(String metricType, Context mContext, int metric){
+		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
+	    SharedPreferences.Editor editor = prefs.edit();
+	    editor.putInt(metricType + "_recent", metric);  
+	    return editor.commit();
+	}
+	
+	public static int loadRecentInt(String metricType, Context mContext){
+		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
+		return prefs.getInt(metricType + "_recent", 0);
+	}
+	
+	public static boolean saveTotalInt(String metricType, Context mContext, int metric){
+		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
+	    SharedPreferences.Editor editor = prefs.edit();
+	    editor.putInt(metricType + "_total", metric);  
+	    return editor.commit();
+	}
+	
+	public static int loadTotalInt(String metricType, Context mContext){
+		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
+		return prefs.getInt(metricType + "_total", 0);
 	}
 	
 	public void addListenerOnButton() {
@@ -118,6 +142,20 @@ public class LeaderBoard extends Activity{
 			public void onClick(View arg0) {
 				mp.stopMusic();
 			    Intent intent = new Intent(context, MainMenu.class);
+			    finish();
+			    			startActivity(intent);   
+ 
+			}
+ 
+		});
+		
+		statsButton = (Button) findViewById(R.id.stats);
+		
+		statsButton.setOnClickListener(new OnClickListener() {
+			 
+			@Override
+			public void onClick(View arg0) {
+			    Intent intent = new Intent(context, StatBoard.class);
 			    finish();
 			    			startActivity(intent);   
  

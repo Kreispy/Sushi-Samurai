@@ -104,7 +104,7 @@ public class Cuttable {
 	}
 	
 	public boolean processIngredient(){
-		if(ingProcessMap.containsKey(name) && !processed){
+		if(ingProcessMap.containsKey(name) && !processed && !hasRecipe()){
 			processed = true;
 			prevName = name; 
 			image = stringDrawMap.get(ingProcessMap.get(name));

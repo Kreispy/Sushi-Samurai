@@ -28,4 +28,14 @@
         android:textSize="@dimen/text25"
         android:typeface="sans" />
 
+    <Button
+        android:id="@+id/stats"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="202dp"
+        android:text="Statistics" />
+
     </RelativeLayout>

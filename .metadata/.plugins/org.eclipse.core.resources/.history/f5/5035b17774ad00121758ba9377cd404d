@@ -1,0 +1,33 @@
+package com.project.sushi;
+import android.app.Application;
+
+public class Velocity extends Application{
+	private int Vy;
+	private int Vx;
+	
+	public Velocity(){
+		this.Vy = 0;
+		this.Vx = 0;
+	}
+	
+	public Velocity(int vx, int vy){
+		this.Vy = vy;
+		this.Vx = vx;
+	}
+	
+	public void setVy(int vy){
+		this.Vy = vy;
+	}
+	
+	public int getVy(){
+		return Vy;
+	}
+	
+	public void setVx(int vx){
+		this.Vx = vx;
+	}
+	
+	public int getVx(){
+		return Vx;
+	}
+}

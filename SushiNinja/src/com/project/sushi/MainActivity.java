@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.app.Activity;
 
 import com.project.sushi.R;
+
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.ImageView;
 
@@ -21,17 +23,19 @@ public class MainActivity extends Activity{
 	protected static int Vx;
 	protected static boolean slow = false;
 	protected static boolean fast = false;
+	protected static int totalMillisecondTime = 0;
 	static int dt; 
 	Timer t; 
 	TimerTask tt;
-
 	
+	private static boolean isPaused; 
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		start = System.nanoTime(); 
-		
+		start = System.nanoTime();
+		isPaused = false; 
 		//Declare the timer
 		t = new Timer();
 		//Set the schedule function and rate
@@ -50,7 +54,26 @@ public class MainActivity extends Activity{
 			dt =  40;
 		}
 		
-		scheduleTT();  
+		Vx = 0;
+		Vy = 0; 
+		// TODO: Count the number of sessions
+		
+		
+		CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
+		
+		int sessionCount = LeaderBoard.loadTotalInt("TOTAL_SESSIONS", cb.getContext());
+		LeaderBoard.saveTotalInt("TOTAL_SESSIONS", cb.getContext(), (sessionCount + 1));
+		
+		scheduleTT(); 
+		
+	}
+	
+	protected void updateTime() {
+	    runOnUiThread(new Runnable() {
+	    public void run() {
+	            totalMillisecondTime += dt;
+	        }
+	    });
 	}
 	
 	public void scheduleTT(){
@@ -64,7 +87,7 @@ public class MainActivity extends Activity{
 		    		
 		    	    @Override
 		    	    public void run() {
-		    	    	
+		    	    	if(isPaused) return;
 		    	        CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
 		    	        cb.scoreboard = (TextView) findViewById(R.id.score1);
 		    	        cb.feedback = (ImageView) findViewById(R.id.feedback);
@@ -72,29 +95,38 @@ public class MainActivity extends Activity{
 		    	        cb.setText();
 		    	        
 		    	        
-		    	        cb.increaseY(Vy);
+		    	        //cb.increaseY(Vy);
 		 
 		    	        //ball will either go left or right
-		    	        if(cb.isLeft()){
-		    	        	cb.decreaseX(Vx);
+		    	        /*if(cb.isLeft()){
+		    	        	//cb.decreaseX(Vx);
+		    	        	invertVx(); 
 		    	        } 
 		    	        else{
-		    	        	cb.increaseX(Vx);
+		    	        	//cb.increaseX(Vx);
 		    	        }
-		    	          	        
+		    	          */	        
+		    	        //cb.increaseX(Vx);
 		    	        /*CuttingBoard.incY -= Vx;
 		    	        CuttingBoard.incX += Vy; //+ 1*ti;
 		    	        */
 		    	        //CuttingBoard.incY = -1*(Vy*ti + 1*ti*ti); 
-		    	        Vy += 1;
-		    	        ti += 5;
+		    	        //Vy += 1;
+		    	        cb.move(); 
+		    	        //ti += 5;
 		    	        //Log.v("Vy = ", Integer.toString(Vy));
 		    	        //Log.v("t = ", Integer.toString(ti));
 		    	        //Log.v(Integer.toString(CuttingBoard.incX), Integer.toString(CuttingBoard.incY));		    	        
-		    	        //Log.v("dt", Integer.toString(dt));
+		    	        
+		    	        updateTime();
+		    	        
+		    	        //Log.v("Time elapsed", new Integer(totalMillisecondTime).toString());
+		    	        //Log.v("Vy = ", Integer.toString(Vy));
+		    	        //Log.v("Vx = ", Integer.toString(Vx));
 		    	        cb.invalidate();
 		    	        
-		    	       
+		    	        
+		    	        
 		    	    }
 		    	     
 		    	});
@@ -132,4 +164,56 @@ public class MainActivity extends Activity{
 */
 
 	
+	public static void setVx(int vx){
+		Vx = vx;
+	}
+	
+	public static void setVy(int vy){
+		Vy = vy;  
+	}
+	
+	public static void setIsPaused(boolean b){
+		isPaused = b; 
+	}
+
+	@Override
+    public void onResume()
+    {
+        super.onResume();
+        isPaused = false; 
+    }
+
+    @Override
+    public void onPause()
+    {
+        isPaused = true;        
+        super.onPause();
+    }
+	/*
+	 * 	protected void onPause(){
+		finish();
+		super.onPause();
+	}
+
+	protected void onRestart (){
+		super.onRestart();
+	    finish();
+	}
+	
+	protected void  onUserLeaveHint (){
+		super.onUserLeaveHint();
+	    finish();
+	}
+	
+	protected void onStop(){
+		super.onStop();
+	    finish();
+	}
+	
+	protected void onRestoreInstanceState(Bundle b){
+		//super.onRestoreInstanceState(b);
+	    finish();
+	}
+	*/
+
 }

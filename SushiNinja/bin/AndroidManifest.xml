@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme" >
         
         <activity
+            android:finishOnTaskLaunch="true"
             android:screenOrientation="landscape"
             android:name="com.project.sushi.MainMenu"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
@@ -29,6 +30,7 @@
         </activity>
 
          <activity
+            android:finishOnTaskLaunch="true"
             android:screenOrientation="landscape"
             android:name="com.project.sushi.Options"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
@@ -37,6 +39,8 @@
         </activity>
         
         <activity
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true"
             android:screenOrientation="landscape"
             android:name="com.project.sushi.MainActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
@@ -45,18 +49,29 @@
         </activity>
                 
          <activity
+            android:finishOnTaskLaunch="true"
             android:screenOrientation="landscape"
             android:name="com.project.sushi.GameOver"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
                                                
         </activity>
         
-           <activity
+         	<activity
+         	android:finishOnTaskLaunch="true"
             android:screenOrientation="landscape"
             android:name="com.project.sushi.LeaderBoard"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
                                                
         </activity>
+        
+         	<activity
+         	android:finishOnTaskLaunch="true"
+            android:screenOrientation="landscape"
+            android:name="com.project.sushi.StatBoard"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+                                               
+        </activity>
+         	
                 
     </application>
 
