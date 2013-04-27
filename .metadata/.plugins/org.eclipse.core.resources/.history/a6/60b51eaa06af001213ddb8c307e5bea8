@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff000000"
+    >
+<FrameLayout 
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<com.project.sushi.CuttingBoard
+    android:id="@+id/pbView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" />
+	
+	<RelativeLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" >
+
+	<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+     
+	    <ImageView
+        android:id="@+id/feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/feedback_default" 
+        android:adjustViewBounds="true"
+        />
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content">
+    	 <ImageView
+        android:id="@+id/scoreback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/score" 
+        android:adjustViewBounds="true"
+        />
+
+	    <TextView
+	        android:id="@+id/score1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:layout_marginLeft="120dp"
+	        android:editable="true"
+	        android:textColor="@color/black"
+	        android:textSize="@dimen/text35" />
+
+</FrameLayout> 
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	 android:layout_marginLeft="25dp">
+	    
+	    
+	     <ImageView
+        android:id="@+id/totalback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/totalcut" 
+        android:adjustViewBounds="true"
+        />
+	
+	     <TextView
+    android:id="@+id/totalcut"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginLeft="120dp"
+    android:editable="true"
+    android:textColor="@color/black"
+    android:textSize="@dimen/text35"  />
+	    
+</FrameLayout>
+	</LinearLayout>
+	
+		<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom = "true" >
+	
+	<Button
+	        android:id="@+id/viewrecipes"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text = "View Recipes"
+	        android:layout_gravity="center_vertical"
+	        />
+     
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content">
+    	
+    	<ImageView
+        android:id="@+id/recipesback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/recipesmade"
+        android:visibility="invisible"
+        android:adjustViewBounds="true"
+        />
+
+	    <TextView
+	        android:id="@+id/recipesmade"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:layout_marginLeft="140dp"
+	        android:editable="true"
+	        android:textColor="@color/black"
+	        android:textSize="@dimen/text35" />
+
+</FrameLayout>
+	
+	</LinearLayout>
+	
+	
+	
+	</RelativeLayout>
+	
+	
+ </FrameLayout>
+    
+</RelativeLayout>

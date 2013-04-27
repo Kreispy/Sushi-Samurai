@@ -1,6 +1,7 @@
 package com.project.sushi;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,20 @@ public class Options extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
 		addListenerOnButton();
+		
+		final Dialog userName = new Dialog(this);
+		userName.setContentView(R.layout.username);
+		userName.setTitle("Please enter your name:");
+		//make the user input dialog box pop up
+		Button input = (Button) userName.findViewById(R.id.GObutton);
+		
+		input.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				userName.dismiss();		
+			}
+		});
+		userName.show();
 		
 	}
 

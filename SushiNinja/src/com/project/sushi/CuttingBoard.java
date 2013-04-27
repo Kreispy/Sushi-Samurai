@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,12 +43,16 @@ public class CuttingBoard extends View implements OnTouchListener{
 	public Stack<Point> asdf = new Stack<Point>(); 
 	public Path path;
 	public Drawable circle;
-	public Drawable[] sushi_images;
 	public TextView scoreboard;
 	public ImageView feedback;
-	public TextView remaining;
+	public ImageView recipesBack;
+	public TextView totalCut;
+	public TextView recipesCreated;
+	public Button viewRecipes;
 	public MediaPlayer playSound;
 	public MediaPlayer mpFail = MediaPlayer.create(getContext(), R.raw.miss);
+	private Drawable[] rankingImages; 
+	private String[] rankingTitles;
 	
 	//parameters to manipulate between levels
 	private int currentLevel = 1;
@@ -89,6 +94,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 	private int recipesMadeGoal; 
 	private int recipesMade = 0; 
 	
+	private boolean nextLevelFlag; 
+	
 	//this probably don't need to be up here?
 	private ArrayList<Cuttable> toBeSpawn; //array containing missing ingredients for recipes
 
@@ -108,13 +115,11 @@ public class CuttingBoard extends View implements OnTouchListener{
 	}
 	
 	protected void init(){
-		this.currentCuttable =  new Cuttable("ingredient1");
+		this.currentCuttable =  new Cuttable("ricebag");
 		toBeSpawn = new ArrayList<Cuttable>();
 		recipes =  new ArrayList<Cuttable>(); 
 		this.setOnTouchListener(this);
 		Resources res = getResources();
-		sushi_images = new Drawable[]
-				{res.getDrawable(R.drawable.sushi),res.getDrawable(R.drawable.sushi1), res.getDrawable(R.drawable.sushi2)};
 
 		circle = res.getDrawable(currentCuttable.getImage());
 		if(currentCuttable.getSound() >= 0){
@@ -127,36 +132,92 @@ public class CuttingBoard extends View implements OnTouchListener{
 		recipesMadeGoal = 2;
 		sushiDroppedTotal = 0;
 		//add in all possible ingredients with 0
-		ingredients.put("ingredient1", 0);
-		ingredients.put("ingredient2", 0);
+		ingredients.put("shrimp", 0);
+		ingredients.put("tempura", 0);
+		ingredients.put("ricebag", 0);
+		ingredients.put("cookedrice", 0);
+		
 		ingredients.put("nori", 0);
 		ingredients.put("sashimi", 0);
 		ingredients.put("rawseaweed", 0);
 		ingredients.put("livefish", 0);
+		ingredients.put("crab", 0);
+		ingredients.put("crabmeat", 0);
+		
+		ingredients.put("avocado", 0);
+		ingredients.put("avocadocut", 0);
 		
 		//initialize recipes and add in what they need
 		HashMap<String, Integer> recipe1 = new HashMap<String, Integer>(); 
-		recipe1.put("ingredient1",1);
-		recipe1.put("ingredient2",1);
+		recipe1.put("rawseaweed",1);
+		recipe1.put("ricebag",1);
+		recipe1.put("avocado",1);
+		recipe1.put("crab",1);
 		
 		HashMap<String, Integer> recipe2 = new HashMap<String, Integer>(); 
-		recipe2.put("rawseaweed",1);
+		recipe2.put("ricebag",1);
 		recipe2.put("livefish",1);
+		
+		HashMap<String, Integer> recipe3 = new HashMap<String, Integer>(); 
+		recipe3.put("ricebag",1);
+		recipe3.put("rawseaweed",1);
+		recipe3.put("shrimp",1);
+		
+		HashMap<String, Integer> recipe4 = new HashMap<String, Integer>(); 
+		recipe4.put("ricebag",1);
+		recipe4.put("livefish",1);
+		recipe4.put("crab",1);
+		recipe4.put("avocado",1);
+		
 
 		//add each recipe into recipes
 		recipes.add(new Cuttable("sushi", R.drawable.sushi, recipe1));
-		recipes.add(new Cuttable("logo", R.drawable.logo, recipe2));
+		recipes.add(new Cuttable("sashimisushi", R.drawable.sashimisushi, recipe2));
+		recipes.add(new Cuttable("tempurasushi", R.drawable.tempurasushi, recipe3));
+		recipes.add(new Cuttable("sushi1", R.drawable.sushi1, recipe4));
 		
-		// TODO: Update number of levels
+		rankingImages  = new Drawable[]
+				{res.getDrawable(R.drawable.rank1),res.getDrawable(R.drawable.rank2), res.getDrawable(R.drawable.rank3),
+						res.getDrawable(R.drawable.rank4), res.getDrawable(R.drawable.rank5)};
+		
+		rankingTitles = new String[]{"Novice Samurai", "Intermediate Samurai", "Advanced Samurai", "Daimyo", "Shogun" };
+		nextLevelFlag = false; 
+		
 	}
 	
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas){
+		 final Dialog recipeDialog = new Dialog(getContext());
+			recipeDialog.setContentView(R.layout.ingredientlists);
+			
+			Button readlist = (Button) recipeDialog.findViewById(R.id.understood);
+			// if button is clicked, close the custom dialog
+			
+			readlist.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					recipeDialog.dismiss();
+					MainActivity.setIsPaused(false);		
+				}
+			});
+			
+			
+			
+	        viewRecipes.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					recipeDialog.show();
+					MainActivity.setIsPaused(true);				}
+			});
+			
+		
+		// if button is clicked, close the custom dialog
+				
 		if(first){
 			generateStartingPosition();
 			first = false; 
 		}
-		
+		nextLevelFlag = false; 
 		//Check for collisions
 		if(pdrawn.size() >=2 && addPoint){
 			//if(!pdrawn.get(pdrawn.size()-1).getFirst() && !pdrawn.get(pdrawn.size()-2).getFirst()){
@@ -170,8 +231,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 		// Reset the coordinates of the new object if it goes off the screen
 		// Note: This is the same instance
 		if (startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 || checkCollide) {
-			Log.v("ingredient1", Integer.toString(ingredients.get("ingredient1")));
-			Log.v("ingredient2", Integer.toString(ingredients.get("ingredient2")));
+
 			boolean checkProc = currentCuttable.needsProcessing(); 
 			if(checkCollide){
 				//checkCollide = false;
@@ -217,9 +277,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 				if(currentCuttable.hasRecipe()){
 				
 					Log.v(currentCuttable.getName(), "entered has recipe collision");
-
-					//recipesMade--; 
-					
 					regenerateSushi(); 
 					handleCheckNextLevel(); 
 				}
@@ -228,16 +285,32 @@ public class CuttingBoard extends View implements OnTouchListener{
 		
 			else if(startY+incY < 0 || startX+incX > getWidth() || startY+incY > getHeight() || startX+incX < 0 ){
 				//off screen
+				if(currentCuttable.needsProcessing()){
+					sushiDropped++;
+					sushiDroppedTotal++; 
+					if(sushiDropped % 3 ==0 && recipesMade >0){// && sushiDropped > 0){
+						sushiDropped = 0; 
+						recipesMade--; 
+						Log.v(Integer.toString(recipesMade), "currentCuttable.needsProcessing()");
+						Log.v(currentCuttable.getName(), "currentCuttable.needsProcessing() name");
+						Log.v(Boolean.toString(currentCuttable.getProcessed()), "currentCuttable.needsProcessing() getProcessed()");
+					}
+					Log.v(Integer.toString(sushiDropped), "sushi dropped recipesMade sushiDropped");
+					Log.v(Integer.toString(recipesMade), "sushi dropped recipesMade");
+					feedback.setImageResource(R.drawable.tryagain);
+					mpFail.start();
+					
+				}
 				handleCheckNextLevel();
 				regenerateSushi(); 
 			}
+			
 		}
 		
 
 		for(int i = 0; i < pdrawn.size(); i++){
 			Point pt = pdrawn.get(i);
 			p.setColor(pt.getColor());
-			//canvas.drawCircle(pt.getX(),pt.getY(),pt.getSize(),p);
 			if(!pt.getFirst() && i != 0){
 				canvas.drawLine( (float)pdrawn.get(i-1).getX(), (float)pdrawn.get(i-1).getY(), (float)pt.getX(), (float)pt.getY(),p);
 			}
@@ -256,15 +329,38 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	
 	private void handleCheckNextLevel(){
-		if(isWin()){
+		if(isWin() && nextLevelFlag == false){
+			nextLevelFlag = true; 
 
 			MainActivity.setIsPaused(true);
 			
 			final Dialog dialog = new Dialog(getContext());
 			dialog.setContentView(R.layout.dialog);
-			dialog.setTitle("Level " + currentLevel + "completed!");
+			
+			int imageNum = (int)Math.floor(Math.log(totalScore / 8000) / Math.log(2.2)) + 1;
+			Log.v(Integer.toString(imageNum), "imageNum");
+			
+			Drawable rankI;
+			String title = "";
+			if(imageNum >= 5){
+				rankI = rankingImages[4];
+				title = rankingTitles[4];
+			}
+			else if(imageNum <0){
+				rankI = rankingImages[0];
+				title = rankingTitles[0];
+			}
+			else{
+				rankI = rankingImages[imageNum];
+				title = rankingTitles[imageNum];
+			}
+			dialog.setTitle("Level " + currentLevel + " completed!" + " You are now " + title + "!");
+			
 			
 			TextView text = (TextView) dialog.findViewById(R.id.text);
+			ImageView rank = (ImageView) dialog.findViewById(R.id.rank);
+			rank.setImageDrawable(rankI);
+			//check which ranking
 			
 			// Not sure about this???
 			int TotalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getContext());
@@ -273,7 +369,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 			
 			text.setText(
 					"Current Score:" + totalScore + "\n" +
-					"Recipes Made:" + recipesMade + "\n	" +
+					"Recipes Made:" + recipesMade + "\n" +
 					"Total Cut:" + TotalCut + "\n" +
 					"Total Dropped:" + sushiDroppedTotal +"\n"+
 					"Total Time:" + totalTime + "\n"
@@ -300,83 +396,33 @@ public class CuttingBoard extends View implements OnTouchListener{
 		generateStartingPosition(); 
 		Resources res = getResources();
 		sushiGeneratedStat++;
-		MainActivity.ti = startTi; // reset time to zero
+		//MainActivity.ti = startTi; // reset time to zero
 		incX = 0; // reset everything
 		incY = 0; // reset everything
 		
 		if(currentCuttable.hasRecipe() && checkCollide){
-			
+			playSound = MediaPlayer.create(getContext(), R.raw.bladecut);
+			playSound.start(); 
 			recipesMade--; 
+			Log.v(Integer.toString(recipesMade), "currentCuttable.hasRecipe() && checkCollide");
 			checkCollide = false; 
+			for(int i = 0; i < recipes.size(); i++){
+				if(recipes.get(i).getName() == currentCuttable.getName()){
+					recipes.get(i).decrementCountMade(); 
+					Log.v((recipes.get(i).getName()), "count made of recipe name decrement");
+					Log.v(Integer.toString(recipes.get(i).countMade), "count made of recipe decrement");
+				}
+			}
 			Log.v(Integer.toString(recipesMade), "hit a recipe");
 			handleCheckNextLevel();
 		}
 		
 		if(currentLevel > 1 && isLoss()){
-			// TODO: Game Over
-			LeaderBoard.saveRecentInt("RECENT_PLAYTIME", this.getContext(), MainActivity.totalMillisecondTime);
-			
-			// Update Total Playtime
-	        int totalTime = LeaderBoard.loadRecentInt("TOTAL_PLAYTIME", this.getContext());
-	        LeaderBoard.saveRecentInt("TOTAL_PLAYTIME", this.getContext(), totalTime + MainActivity.totalMillisecondTime);
-	        
-			Intent gameOver = new Intent (getContext(), GameOver.class);
-			getContext().startActivity(gameOver);
-			
-			
-			// Update Pieces of Sushi Cut
-			LeaderBoard.saveRecentInt("RECENT_SUSHI_CUT", this.getContext(), sushiSlicedStat);
-			
-			int runningTotalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getContext());
-			LeaderBoard.saveTotalInt("TOTAL_SUSHI_CUT", 
-					this.getContext(), (runningTotalCut + sushiSlicedStat));
-			
-			
-			// TODO: Update sushi generated cut
-			LeaderBoard.saveRecentInt("RECENT_SUSHI_GENERATED", this.getContext(), sushiGeneratedStat);
-			
-			int runningSushiGenerated = LeaderBoard.loadTotalInt("TOTAL_SUSHI_GENERATED", this.getContext());
-			LeaderBoard.saveTotalInt("TOTAL_SUSHI_GENERATED", 
-					this.getContext(), (runningSushiGenerated + sushiGeneratedStat));
-			
-			// Update Recent Score
-			LeaderBoard.saveRecentInt("RECENT_SCORE", this.getContext(), ((int) totalScore));
-			
-			// Update Cumulative Total Score
-			int runningTotalScore = LeaderBoard.loadTotalInt("TOTAL_SCORE", this.getContext());
-			LeaderBoard.saveTotalInt("TOTAL_SCORE", 
-					this.getContext(), (runningTotalScore + ((int) totalScore)));
-			
-			// Check High Score
-			try {
-				List<Integer> scoreList = LeaderBoard.getScoresList();
-				Integer thresholdScore = scoreList.get(4);
-				if (((int) totalScore) > thresholdScore){
-					scoreList.set(4, ((int) totalScore));
-					LeaderBoard.setScoresList(scoreList);
-					LeaderBoard.saveList(scoreList, LeaderBoard.arrayName, this.getContext());
-				}
-			}
-			catch (Exception e) {
-				Log.v(e.toString(), e.toString());
-			}
+			handleGameOver();
 		}
-		
-		if(currentCuttable.needsProcessing()){
-			sushiDropped++;
-			sushiDroppedTotal++; 
-			if(sushiDropped % 3 ==0 && recipesMade >0){
-				sushiDropped = 0; 
-				recipesMade--; 
-			}
-			Log.v(Integer.toString(sushiDropped), "sushi dropped recipesMade sushiDropped");
-			Log.v(Integer.toString(recipesMade), "sushi dropped recipesMade");
-			feedback.setImageResource(R.drawable.tryagain);
-			mpFail.start();
-			handleCheckNextLevel();
-		}
+
 		checkCollide = false; 
-		int stopped = 0; 
+ 
 		//check if there's a recipe that has been fulfilled
 		boolean finished = false; //boolean for if there's a recipe finished
 		for (int i = 0; i < recipes.size(); i++){
@@ -384,7 +430,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 				circle = res.getDrawable(recipes.get(i).getImage()); //make the next the recipe final product
 				currentCuttable = recipes.get(i);
 				Log.v(Boolean.toString(currentCuttable.hasRecipe()), "has recipe");
-				stopped = i; 
 				//decrement ingredients by recipe specifications
 				Iterator<Entry<String, Integer>> it = (recipes.get(i)).getRecipe().entrySet().iterator(); 
 				while(it.hasNext()){
@@ -399,17 +444,18 @@ public class CuttingBoard extends View implements OnTouchListener{
 				}
 				break; 
 			}
+			Log.v((recipes.get(i).getName()), "count made of recipe name");
+			Log.v(Integer.toString(recipes.get(i).countMade), "count made of recipe");
 		}
-		/*Log.v("ingredient1", Integer.toString(ingredients.get("ingredient1")));
-		Log.v("ingredient2", Integer.toString(ingredients.get("ingredient2")));
-		Log.v("fish", Integer.toString(ingredients.get("livefish")));
-		Log.v("seaweed", Integer.toString(ingredients.get("rawseaweed")));
-		*/
 		if(finished == false){
 			//need to spawn random ingredient to get any recipe made
 			for(int i = 0; i < recipes.size(); i++){
-				toBeSpawn.addAll(recipes.get(i).getMissingIng(ingredients));
+				Log.v(Integer.toString(toBeSpawn.size()), "toBeSpawnSize1");
+				ArrayList<Cuttable> getTemp = recipes.get(i).getMissingIng(ingredients);
+				toBeSpawn.addAll(getTemp);
+				Log.v(Integer.toString(toBeSpawn.size()), "toBeSpawnSize2");
 			}
+			Log.v(Integer.toString(toBeSpawn.size()), "toBeSpawnSize3");
 			int randomIngredient = ingRand.nextInt(toBeSpawn.size());
 			currentCuttable = toBeSpawn.get((randomIngredient));
 			circle = res.getDrawable(toBeSpawn.get((randomIngredient)).getImage());
@@ -422,6 +468,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 		invalidate(); 
 	}
 	
+	
+	
 	private void generateStartingPosition(){
 		int yGeneration = random.nextInt(3);
 		//int yGeneration = 0; 
@@ -431,16 +479,11 @@ public class CuttingBoard extends View implements OnTouchListener{
 				Vx = -(getWidth()/100 + random.nextInt((getWidth()/100)+1));
 				startY = getHeight();
 				if(random.nextBoolean()){
-					
 					left = true;
-					//startX = random.nextInt(getWidth()/4);
-					//startX = random.nextInt(getWidth());
 					startX = random.nextInt(getWidth()) / 2;
 				}
 				else{
 					left = false;
-					//startX = getWidth() - random.nextInt(getWidth()/4);
-					//startX = getWidth() - random.nextInt(getWidth());
 					startX = random.nextInt(getWidth()) / 2 + getWidth() / 2;
 				}
 				
@@ -448,45 +491,25 @@ public class CuttingBoard extends View implements OnTouchListener{
 			case 1:
 				left = true;
 				startY = random.nextInt(1*getHeight()/3) + (int)(1*getHeight()/3);
-				//startY = random.nextInt(3*getHeight()/5) + (int)(1*getHeight()/5);
 				startX = 0; 
 				generateVFromWalls();
-				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
 				break;
 			case 2:
 				left = false; 
 				startY = random.nextInt(1*getHeight()/3) + (int)(1*getHeight()/3);
-				//startY = random.nextInt(3*getHeight()/5) + (int)(1.25*getHeight()/5);
 				startX = getWidth(); 
 				generateVFromWalls();
-				//MainActivity.Vy = -1 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1)); 
-				//MainActivity.Vx *= random.nextInt(3*getHeight()/4) / getHeight(); 
 				break;
 		}
-		/*Log.v("Start x: ", Double.toString(startX));
-		Log.v("Start y: ", Double.toString(startY));
-		Log.v("V x: ", Double.toString(Vx));
-		Log.v("V y: ", Double.toString(Vy));
-		Log.v(Double.toString(getWidth()), "total width");
-		Log.v(Double.toString(getHeight()), "total height");
-		Log.v(Double.toString(startY), "starty");*/
 		if(left){
 			Vx *= -1;
 		}
-		//MainActivity.setVx(Vx);
-		//MainActivity.setVy(Vy);
-		//incY = Vy; 
-		//startY = 500;
 	}
 	
 	private void generateVFromWalls(){
-		Log.v("Generate from wall:", "true");
-		//MainActivity.setVy(-1/12 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )) - getHeight()/40);
-		
-		//MainActivity.setVx(-(getWidth()/200 + random.nextInt((getWidth()/220)+1)));
         Vy = (-1/12 * random.nextInt((int)Math.sqrt(2* (getHeight() - startY) - 1 )) - getHeight()/40);
-		
 		Vx = (-(getWidth()/200 + random.nextInt((getWidth()/220)+1)));
+		//math/physics not happening in time
 		/*double vsquared = MainActivity.Vy*MainActivity.Vy + MainActivity.Vx*MainActivity.Vx;
 		double range = vsquared;
 		double angle = 90; 
@@ -589,23 +612,29 @@ public class CuttingBoard extends View implements OnTouchListener{
 		scoreboard.setText(Double.toString(totalScore));
 		if(currentLevel > 1){
 		//remaining.setText(Integer.toString(sushiSliced)+  " Dropped:" + Integer.toString(sushiDropped));
-			remaining.setText(Integer.toString(sushiSliced)+  " Recipes made:" + Integer.toString(recipesMade));
+			recipesBack.setVisibility(ImageView.VISIBLE);
+			viewRecipes.setVisibility(Button.VISIBLE);
+			totalCut.setText(Integer.toString(sushiSliced));
+			recipesCreated.setText(Integer.toString(recipesMade));
 		}
 		else{
-		remaining.setText(Integer.toString(sushiSliced));
+			totalCut.setText(Integer.toString(sushiSliced));
 		}
 		
 	}
 	public void updateScore(){
 		if(scoreboard != null){
 			scoreboard.setText(Double.toString(totalScore)); //+ "\t Remaining Sushi: " + sushiSliced);
-			remaining.setText(Integer.toString(sushiSliced));
+			totalCut.setText(Integer.toString(sushiSliced));
 		}
 	}
 	
 	public boolean isWin(){
 		//return sushiSliced == 0;	
 		if(currentLevel > 1){
+			Log.v(Integer.toString(recipesMade), "recipesMade isWin");
+			Log.v(Integer.toString(recipesMadeGoal), "recipesMadeGoal isWin");
+			Log.v(Boolean.toString(recipesMade >= this.recipesMadeGoal), "isWin?");
 			return (recipesMade >= this.recipesMadeGoal);
 		}
 		else{
@@ -628,11 +657,11 @@ public class CuttingBoard extends View implements OnTouchListener{
 			recipesMade = 0; 
 			sushiDropped = 0; 
 			if(offset > 18){
-				offset -= 10;
+				offset -= 5;
 			}
 			Vy -= 10;
 			positiveRecipe = false; 
-			recipesMadeGoal = currentLevel+1; 
+			recipesMadeGoal = currentLevel*2; 
 			Iterator<Entry<String, Integer>> it = ingredients.entrySet().iterator(); 
 			while(it.hasNext()){
 				Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
@@ -648,6 +677,56 @@ public class CuttingBoard extends View implements OnTouchListener{
 		Vy += 1; 
 		incX += Vx; 
 		//invalidate(); 
+	}
+	
+	private void handleGameOver(){
+		// TODO: Game Over
+					LeaderBoard.saveRecentInt("RECENT_PLAYTIME", this.getContext(), MainActivity.totalMillisecondTime);
+					
+					// Update Total Playtime
+			        int totalTime = LeaderBoard.loadRecentInt("TOTAL_PLAYTIME", this.getContext());
+			        LeaderBoard.saveRecentInt("TOTAL_PLAYTIME", this.getContext(), totalTime + MainActivity.totalMillisecondTime);
+			        
+					Intent gameOver = new Intent (getContext(), GameOver.class);
+					getContext().startActivity(gameOver);
+					
+					
+					// Update Pieces of Sushi Cut
+					LeaderBoard.saveRecentInt("RECENT_SUSHI_CUT", this.getContext(), sushiSlicedStat);
+					
+					int runningTotalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getContext());
+					LeaderBoard.saveTotalInt("TOTAL_SUSHI_CUT", 
+							this.getContext(), (runningTotalCut + sushiSlicedStat));
+					
+					
+					// TODO: Update sushi generated cut
+					LeaderBoard.saveRecentInt("RECENT_SUSHI_GENERATED", this.getContext(), sushiGeneratedStat);
+					
+					int runningSushiGenerated = LeaderBoard.loadTotalInt("TOTAL_SUSHI_GENERATED", this.getContext());
+					LeaderBoard.saveTotalInt("TOTAL_SUSHI_GENERATED", 
+							this.getContext(), (runningSushiGenerated + sushiGeneratedStat));
+					
+					// Update Recent Score
+					LeaderBoard.saveRecentInt("RECENT_SCORE", this.getContext(), ((int) totalScore));
+					
+					// Update Cumulative Total Score
+					int runningTotalScore = LeaderBoard.loadTotalInt("TOTAL_SCORE", this.getContext());
+					LeaderBoard.saveTotalInt("TOTAL_SCORE", 
+							this.getContext(), (runningTotalScore + ((int) totalScore)));
+					
+					// Check High Score
+					try {
+						List<Integer> scoreList = LeaderBoard.getScoresList();
+						Integer thresholdScore = scoreList.get(4);
+						if (((int) totalScore) > thresholdScore){
+							scoreList.set(4, ((int) totalScore));
+							LeaderBoard.setScoresList(scoreList);
+							LeaderBoard.saveList(scoreList, LeaderBoard.arrayName, this.getContext());
+						}
+					}
+					catch (Exception e) {
+						Log.v(e.toString(), e.toString());
+					}
 	}
 	
 	//TO BE FURTHER TESTED

@@ -1,0 +1,113 @@
+package com.project.sushi;
+
+//import java.util.Timer;
+//import java.util.TimerTask;
+
+import android.os.Bundle;
+import android.app.Activity;
+
+import com.project.sushi.R;
+
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.ImageView;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class MainActivity extends Activity{
+
+	protected long start;
+
+	protected static boolean slow = false;
+	protected static boolean fast = false;
+	protected static int totalMillisecondTime = 0;
+	static int dt; 
+	Timer t; 
+	//TimerTask tt;
+	
+	private static boolean isPaused; 
+		
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		start = System.nanoTime();
+		isPaused = false; 
+		//Declare the timer
+		t = new Timer();
+
+		
+		CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
+		
+		int sessionCount = LeaderBoard.loadTotalInt("TOTAL_SESSIONS", cb.getContext());
+		LeaderBoard.saveTotalInt("TOTAL_SESSIONS", cb.getContext(), (sessionCount + 1));
+		
+		scheduleTT(); 
+		
+	}
+	
+	protected void updateTime() {
+	    runOnUiThread(new Runnable() {
+	    public void run() {
+	            totalMillisecondTime += dt;
+	        }
+	    });
+	}
+	
+	public void scheduleTT(){
+		 
+		t.scheduleAtFixedRate(new TimerTask() {
+		    @Override
+		    public void run() {
+		        //Called each time when 1000 milliseconds (1 second) (the period parameter)
+		    	//We must use this function in order to change the text view text
+		    	runOnUiThread(new Runnable() {
+		    		
+		    	    @Override
+		    	    public void run() {
+		    	    	if(isPaused) return;
+		    	        CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
+		    	        cb.scoreboard = (TextView) findViewById(R.id.score1);
+		    	        cb.feedback = (ImageView) findViewById(R.id.feedback);
+		    	        cb.remaining = (TextView) findViewById(R.id.remaining);
+		    	        cb.setText();
+
+		    	        cb.move(); 	    	        
+		    	        
+		    	        updateTime();
+
+		    	        cb.invalidate();
+		    	        
+		    	    }
+		    	     
+		    	});
+		    }
+		         
+		},
+		//Set how long before to start calling the TimerTask (in milliseconds)
+		0,
+		//Set the amount of time between each execution (in milliseconds)
+		dt);
+	}
+
+
+	public static void setIsPaused(boolean b){
+		isPaused = b; 
+	}
+
+	@Override
+    public void onResume()
+    {
+        super.onResume();
+        isPaused = false; 
+    }
+
+    @Override
+    public void onPause()
+    {
+        isPaused = true;        
+        super.onPause();
+    }
+
+}

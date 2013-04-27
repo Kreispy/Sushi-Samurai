@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ff000000"
     >
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
-
-</LinearLayout>
-
 <FrameLayout 
     android:orientation="vertical"
     android:layout_width="fill_parent"
@@ -23,6 +16,10 @@
     android:layout_height="fill_parent"
     android:background="@drawable/background" />
 	
+	<RelativeLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" >
+
 	<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
@@ -33,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:src="@drawable/feedback_default" 
+        android:adjustViewBounds="true"
         />
 	<FrameLayout 
 	    android:layout_width="wrap_content"
@@ -42,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/score" 
+        android:adjustViewBounds="true"
         />
 
 	    <TextView
@@ -62,26 +61,69 @@
 	    
 	    
 	     <ImageView
-        android:id="@+id/remainingback"
+        android:id="@+id/totalback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/remaining" 
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/totalcut" 
+        android:adjustViewBounds="true"
         />
 	
 	     <TextView
-    android:id="@+id/remaining"
+    android:id="@+id/totalcut"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:layout_marginLeft="160dp"
+    android:layout_marginLeft="120dp"
     android:editable="true"
     android:textColor="@color/black"
     android:textSize="@dimen/text35"  />
 	    
 </FrameLayout>
-
-
 	</LinearLayout>
+	
+		<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom = "true" >
+     
+	<FrameLayout 
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content">
+    	
+    	<ImageView
+        android:id="@+id/recipesback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/recipesmade"
+        android:visibility="invisible"
+        android:adjustViewBounds="true"
+        />
+
+	    <TextView
+	        android:id="@+id/recipesmade"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_vertical"
+	        android:layout_marginLeft="140dp"
+	        android:editable="true"
+	        android:textColor="@color/black"
+	        android:textSize="@dimen/text35" />
+
+</FrameLayout>
+
+	<Button
+	        android:id="@+id/viewrecipes"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight = "true"
+	        android:background = "@drawable/viewrecipes"
+	        android:layout_gravity="center_vertical"
+	        android:visibility="invisible"
+	        android:layout_marginLeft = "550dp"
+	        />
+	
+	</LinearLayout>	
+	</RelativeLayout>	
  </FrameLayout>
-    
-</LinearLayout>
+</RelativeLayout>

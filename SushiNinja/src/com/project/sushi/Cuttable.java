@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.util.Log;
+
 
 public class Cuttable {
 	
@@ -19,12 +21,14 @@ public class Cuttable {
 	private HashMap<String, String> ingProcessMap = new HashMap<String, String>();
 	private HashMap<String, Integer> soundMap = new HashMap<String, Integer>();
 	
+	public int countMade; 
+	
 	public Cuttable(String n, int d, HashMap<String, Integer> r){
 		name = n;    
 		prevName = n; 
 		image = d; 
 		recipe = r; 
-		processed = false; 
+		processed = true; 
 		init();
 	}
 	
@@ -41,19 +45,29 @@ public class Cuttable {
 		name = n; 
 		prevName = n; 
 		recipe = new HashMap<String, Integer>(); 
-		stringDrawMap.put("ingredient1", R.drawable.sushi1);
-		stringDrawMap.put("ingredient2", R.drawable.sushi2);
-		stringDrawMap.put("sushi", R.drawable.sushi);
-		stringDrawMap.put("gj", R.drawable.goodjob);
+		stringDrawMap.put("avocado", R.drawable.avocado);
+		stringDrawMap.put("avocadocut", R.drawable.avocadocut);
+		stringDrawMap.put("shrimp", R.drawable.shrimp);
+		stringDrawMap.put("tempura", R.drawable.tempura);
 		stringDrawMap.put("nori", R.drawable.nori);
 		stringDrawMap.put("rawseaweed", R.drawable.seaweed);
 		stringDrawMap.put("sashimi", R.drawable.sashimi);
 		stringDrawMap.put("livefish", R.drawable.livefish);
+		stringDrawMap.put("crab", R.drawable.crab);
+		stringDrawMap.put("crabmeat", R.drawable.crabmeat);
+		stringDrawMap.put("ricebag", R.drawable.ricebag);
+		stringDrawMap.put("cookedrice", R.drawable.cookedrice);
 		
 		soundMap.put("rawseaweed", R.raw.seaweed);
-		soundMap.put("gj", R.raw.blade4);
+		soundMap.put("avocado", R.raw.blade4);
 		soundMap.put("livefish", R.raw.fish);
-		soundMap.put("ingredient1", R.raw.bladecut);
+		soundMap.put("shrimp", R.raw.shrimp);
+		soundMap.put("crab", R.raw.crab);
+		soundMap.put("ricebag", R.raw.rice);
+		soundMap.put("sushi", R.raw.bladecut);
+		soundMap.put("sushi1", R.raw.bladecut);
+		soundMap.put("sashimisushi", R.raw.bladecut);
+		soundMap.put("tempurasushi", R.raw.bladecut);
 		
 		image = stringDrawMap.get(n); 
 		
@@ -70,10 +84,13 @@ public class Cuttable {
 	}
 	
 	private void init(){
-		ingProcessMap.put("ingredient1", "ingredient2");
-		ingProcessMap.put("ingredient2", "ingredient1");
+		ingProcessMap.put("shrimp", "tempura");
+		ingProcessMap.put("avocado", "avocadocut");
 		ingProcessMap.put("rawseaweed", "nori");
 		ingProcessMap.put("livefish", "sashimi");
+		ingProcessMap.put("crab", "crabmeat");
+		ingProcessMap.put("ricebag", "cookedrice");
+		countMade = 0; 
 	}
 	
 	public boolean hasRecipe(){
@@ -136,6 +153,7 @@ public class Cuttable {
 				return false; 
 			}
 		}
+		countMade++; 
 		return true; 
 	}
 	
@@ -144,10 +162,19 @@ public class Cuttable {
 		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 
 		while(it.hasNext()){
 			Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
+			Log.v(pairs.getKey(), "pairs key");
+			Log.v(Integer.toString(pairs.getValue()), "pairs value");
+			
+			Log.v(Integer.toString(ingredients.get(pairs.getKey())), "ing value");
 			if(ingredients.get(pairs.getKey()) < pairs.getValue()){
 				toBeSpawn.add(new Cuttable(pairs.getKey())); //adds missing recipe peices in 
 			}
 		}
 		return toBeSpawn; 
 	}
+	
+	public void decrementCountMade(){
+		countMade--;
+	}
+	
 }

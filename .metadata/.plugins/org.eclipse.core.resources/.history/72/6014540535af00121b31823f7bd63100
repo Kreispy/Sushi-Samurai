@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="250dp"
+    android:background="@color/silver"
+    android:orientation="vertical" >
+    
+    <EditText
+    	android:layout_width="match_parent"
+    	android:layout_height="75dp"
+    	android:id="@+id/name"
+    	> 
+    </EditText>
+    
+    <Button
+        android:layout_width="100dp"
+    	android:layout_height="75dp" 
+    	android:layout_below="@id/name"
+    	android:id="@+id/GObutton"
+    	android:background="@drawable/continuebutton"
+    	android:layout_alignParentRight="true"
+        ></Button>
+
+</RelativeLayout>

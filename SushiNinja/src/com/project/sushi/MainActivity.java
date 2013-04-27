@@ -5,12 +5,16 @@ package com.project.sushi;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.Dialog;
 
 import com.project.sushi.R;
-
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.Button;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -66,6 +70,9 @@ public class MainActivity extends Activity{
 		
 		scheduleTT(); 
 		
+	
+	
+		
 	}
 	
 	protected void updateTime() {
@@ -91,7 +98,10 @@ public class MainActivity extends Activity{
 		    	        CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
 		    	        cb.scoreboard = (TextView) findViewById(R.id.score1);
 		    	        cb.feedback = (ImageView) findViewById(R.id.feedback);
-		    	        cb.remaining = (TextView) findViewById(R.id.remaining);
+		    	        cb.totalCut = (TextView) findViewById(R.id.totalcut);
+		    	        cb.recipesCreated = (TextView) findViewById(R.id.recipesmade);
+		    	        cb.recipesBack = (ImageView) findViewById(R.id.recipesback);
+		    	        cb.viewRecipes = (Button) findViewById(R.id.viewrecipes);
 		    	        cb.setText();
 		    	        
 		    	        

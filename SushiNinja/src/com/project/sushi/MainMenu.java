@@ -1,6 +1,7 @@
 package com.project.sushi;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -29,8 +30,8 @@ public class MainMenu extends Activity {
 		addListenerOnButton();
 		RunAnimations();
 		mp.play(R.raw.sushininjaopening);
+		
 	}
-
 	public void addListenerOnButton() {
 
 		final Context context = this;
