@@ -1,3 +1,4 @@
+/* COPYRIGHT (C) 2013 Angela M Yu, Ana Mei, Kevin Zhao, and Chris Chow. All Rights Reserved. */
 package com.project.sushi;
 
 import org.junit.Test;

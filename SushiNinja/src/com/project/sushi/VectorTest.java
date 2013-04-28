@@ -1,3 +1,4 @@
+/* COPYRIGHT (C) 2013 Angela M Yu, Ana Mei, Kevin Zhao, and Chris Chow. All Rights Reserved. */
 package com.project.sushi;
 
 import static org.junit.Assert.*;
@@ -53,8 +54,6 @@ public class VectorTest {
 	@Test
 	public void testTimesAdd() {
 		Point tacn = vcn.timesAdd(2, p2);
-		System.out.println(tacn.getX());
-		System.out.println(tacn.getY());
 		assertTrue(tacn.getX() == -10);
 		assertTrue(tacn.getY() == -20);
 		//Can add more here

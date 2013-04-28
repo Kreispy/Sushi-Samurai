@@ -1,3 +1,5 @@
+/* COPYRIGHT (C) 2013 Angela M Yu, Ana Mei, Kevin Zhao, and Chris Chow. All Rights Reserved. */
+
 package com.project.sushi;
 
 import android.os.Bundle;
@@ -26,15 +28,13 @@ public class MainActivity extends Activity{
 		setContentView(R.layout.main);
 		start = System.nanoTime();
 		isPaused = false; 
-		//Declare the timer
-		t = new Timer();
+		t = new Timer(); //Declare the timer
 		dt =  40;
 		CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
-		
 		int sessionCount = LeaderBoard.loadTotalInt("TOTAL_SESSIONS", cb.getContext());
 		LeaderBoard.saveTotalInt("TOTAL_SESSIONS", cb.getContext(), (sessionCount + 1));
 		
-		scheduleTT(); 
+		scheduleTT(); //start the timer
 	}
 	
 	protected void updateTime() {
@@ -46,7 +46,7 @@ public class MainActivity extends Activity{
 	}
 	
 	public void scheduleTT(){
-		 
+		//runs the CuttingBoard
 		t.scheduleAtFixedRate(new TimerTask() {
 		    @Override
 		    public void run() {

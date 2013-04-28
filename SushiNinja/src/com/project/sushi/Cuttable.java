@@ -1,3 +1,4 @@
+/* COPYRIGHT (C) 2013 Angela M Yu, Ana Mei, Kevin Zhao, and Chris Chow. All Rights Reserved. */
 package com.project.sushi;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Cuttable {
 	private HashMap<String, String> ingProcessMap = new HashMap<String, String>();
 	private HashMap<String, Integer> soundMap = new HashMap<String, Integer>();
 	
-	public int countMade; 
+	public int countMade; //count how many made for this instance of Cuttable
 	
 	public Cuttable(String n, int d, HashMap<String, Integer> r){
 		name = n;    
@@ -76,7 +77,6 @@ public class Cuttable {
 			sound = -1;
 		}
 		
-		
 		processed = false; 
 		init();
 	}
@@ -91,6 +91,7 @@ public class Cuttable {
 		countMade = 0; 
 	}
 	
+	//Checks if it has a recipe, aka. if this is a final product
 	public boolean hasRecipe(){
 		if (recipe.size() == 0){
 			return false; 
@@ -118,6 +119,7 @@ public class Cuttable {
 		return processed; 
 	}
 	
+	//processes the ingredient to it's final form if possible
 	public boolean processIngredient(){
 		if(ingProcessMap.containsKey(name) && !processed && !hasRecipe()){
 			processed = true;
@@ -143,6 +145,7 @@ public class Cuttable {
 		return (soundMap.containsKey(n));
 	}
 	
+	//checks if the recipe in this instance has been made
 	public boolean checkRecipeMade(HashMap<String, Integer> ingredients){
 		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 
 		while(it.hasNext()){
@@ -155,6 +158,7 @@ public class Cuttable {
 		return true; 
 	}
 	
+	//Looks through all recipes and add the missing ingredients for each recipe into an ArrayList<Cuttable>
 	public ArrayList<Cuttable> getMissingIng(HashMap<String, Integer> ingredients){
 		ArrayList<Cuttable> toBeSpawn = new ArrayList<Cuttable>(); 
 		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 

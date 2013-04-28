@@ -1,3 +1,4 @@
+/* COPYRIGHT (C) 2013 Angela M Yu, Ana Mei, Kevin Zhao, and Chris Chow. All Rights Reserved. */
 package com.project.sushi;
 
 import java.util.ArrayList;
@@ -6,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Stack;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -78,8 +78,9 @@ public class CuttingBoard extends View implements OnTouchListener{
 
 	
 	private int sushiDroppedTotal; 
-	int Vx = 0;
-	int Vy = 0; 
+	private int Vx = 0;
+	private int Vy = 0; 
+	private float v0factor; 
 	
 	boolean first = true; 
 	boolean enforceRecipeDecrement = false; 
@@ -122,13 +123,12 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 		startY = random.nextInt(500)+(getWidth()/2); //getHeight()/2; 
 		startX = getHeight();
-		
-		offset = 150; 
+		v0factor = 1; 
+		offset = 140; 
 		currentLevel = 1;
 		sushiSliced = 0;//for a game over / end screen.
 		sushiDropped = 0;
 		
-	
 		startY = 0;
 		startX = 0;
 		incrementX = 0; 
@@ -172,8 +172,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 		recipe4.put("livefish",1);
 		recipe4.put("crab",1);
 		recipe4.put("avocado",1);
-		
-
+	
 		//add each recipe into recipes
 		recipes.add(new Cuttable("sushi", R.drawable.sushi, recipe1));
 		recipes.add(new Cuttable("sashimisushi", R.drawable.sashimisushi, recipe2));
@@ -267,7 +266,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 					}
 				}
 				if(currentCuttable.hasRecipe()){
-					Log.v(currentCuttable.getName(), "entered has recipe collision");
 					regenerateSushi(); 
 					handleCheckNextLevel(); 
 				}
@@ -301,7 +299,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 			}	
 		}	
 		
-		circle.setBounds(startX+incrementX, startY+incrementY, startX+offset+incrementX+50, startY+offset+incrementY+50);
+		circle.setBounds(startX+incrementX, startY+incrementY, startX+offset+incrementX+60, startY+offset+incrementY+60);
 		circle.draw(canvas);
 	}	
 	
@@ -334,8 +332,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 			}
 
 			dialog.setTitle("Level " + currentLevel + " completed!" + " You are now " + title + "!");
-			
-			
+
 			TextView text = (TextView) dialog.findViewById(R.id.text);
 			ImageView rank = (ImageView) dialog.findViewById(R.id.rank);
 			rank.setImageDrawable(rankI);
@@ -379,24 +376,24 @@ public class CuttingBoard extends View implements OnTouchListener{
 		}
 		incrementX = 0; // reset everything
 		incrementY = 0; // reset everything
-		
+		//check if user cut a recipe product
 		if(currentCuttable.hasRecipe() && checkCollide){
 			playSound = MediaPlayer.create(getContext(), R.raw.bladecut);
 			playSound.start(); 
-			if(this.enforceRecipeDecrement){
+			if(this.enforceRecipeDecrement){ //penalty only when penalty is enforced
 				recipesMade--;
 			}
 			checkCollide = false; 
 			for(int i = 0; i < recipes.size(); i++){
 				if(recipes.get(i).getName() == currentCuttable.getName()){
-					recipes.get(i).decrementCountMade(); 
+					recipes.get(i).decrementCountMade(); //decrements count made of that recipe
 				}
 			}
 			handleCheckNextLevel();
 		}
 		
 		if(currentLevel > 1 && isLoss()){
-			handleGameOver();
+			handleGameOver(); //goes to game over
 		}
 		checkCollide = false; 
 		
@@ -408,18 +405,17 @@ public class CuttingBoard extends View implements OnTouchListener{
 				currentCuttable = recipes.get(i);
 				//decrement ingredients by recipe specifications
 				Iterator<Entry<String, Integer>> it = (recipes.get(i)).getRecipe().entrySet().iterator(); 
-				while(it.hasNext()){
+				while(it.hasNext()){ //decrement ingredients by what's needed to make the recipe
 					Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
-					ingredients.put(pairs.getKey(), ingredients.get(pairs.getKey()) - pairs.getValue() );
+					ingredients.put(pairs.getKey(), ingredients.get(pairs.getKey()) - pairs.getValue() ); 
 				}
 				finished = true; 
 				recipesMade++; 
-				if(recipesMade > 1){
+				if(recipesMade > 1){ //check if enforcement of penalty needs to be held
 					enforceRecipeDecrement = true; 
-					 
 				}
 				else if(recipesMade == 1){
-					sushiDropped = 0;
+					sushiDropped = 0; //resets for sushi dropped penalty
 				}
 				break; 
 			}
@@ -444,8 +440,8 @@ public class CuttingBoard extends View implements OnTouchListener{
 	}
 	
 	
-	
 	private void generateStartingPositionAndVelocity(){
+		//randomly generates starting position and velocities
 		int yGeneration = random.nextInt(3);
 		switch (yGeneration){
 			case 0:
@@ -477,14 +473,19 @@ public class CuttingBoard extends View implements OnTouchListener{
 		if(isFromLeftScreen){
 			Vx *= -1;
 		}
+		//increases velocity based on v0factor which increases as level increases
+		Vy *= v0factor; 
+		Vx *= v0factor; 
 	}
 	
 	private void generateVelocityFromWalls(){
+		//randomly generates velocities specifically for generation off the walls
 		Vy = (-1* random.nextInt((int)Math.sqrt( (getHeight() - startY)) / 3) - getHeight()/45);
 		Vx = (-(getWidth()/200 + random.nextInt((getWidth()/220)+1)));
 	}
 	
 	public boolean onTouch(View view, MotionEvent event){
+		//handles user touch events
 		if (event.getAction() == MotionEvent.ACTION_DOWN ) {
 			pdrawn.clear();
 			Point newP = new Point(event.getX(),event.getY(),drawColor,size, true); 
@@ -504,13 +505,11 @@ public class CuttingBoard extends View implements OnTouchListener{
 			addPoint = true; 
 			invalidate();
 		}
-		
-		
 		return true; 
-		
 	}
 	
 	public void clearPoints(){
+		//clear list of points drawn by user
 		pdrawn = new ArrayList<Point>(); 
 	}
 
@@ -536,9 +535,6 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	public boolean isWin(){	
 		if(currentLevel > 1){
-			Log.v(Integer.toString(recipesMade), "recipesMade isWin");
-			Log.v(Integer.toString(recipesMadeGoal), "recipesMadeGoal isWin");
-			Log.v(Boolean.toString(recipesMade >= this.recipesMadeGoal), "isWin?");
 			return (recipesMade >= this.recipesMadeGoal);
 		}
 		else{
@@ -558,7 +554,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 		if(offset > 18){
 			offset -= 5;
 		}
-		Vy -= 10;
+		v0factor *= 1.01; 
 		enforceRecipeDecrement = false; 
 		recipesMadeGoal = currentLevel*2; 
 		Iterator<Entry<String, Integer>> it = ingredients.entrySet().iterator(); 
