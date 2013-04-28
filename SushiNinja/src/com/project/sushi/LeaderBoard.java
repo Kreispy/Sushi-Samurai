@@ -35,6 +35,7 @@ public class LeaderBoard extends Activity{
 	SharedPreferences settings;
 	static List<Integer> scoresList;
 	MusicPlayer mp = new MusicPlayer(this);
+	static String username = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,22 +44,10 @@ public class LeaderBoard extends Activity{
 		addListenerOnButton();
 		settings = getSharedPreferences(PREFERENCE_KEY, 0);
 		
-
-		// TEST
-		/*
-		List<Integer> testList = new ArrayList<Integer>();
-		testList.add(1000);
-		testList.add(0);
-		testList.add(0);
-		testList.add(0);
-		testList.add(0);
-		Collections.sort(testList);
-		saveList(testList, arrayName, this.getApplicationContext());
-		// saveArray(testArray, arrayName, this.getApplicationContext());
-		 
-		*/
-		// TEST
-		
+		updateDisplayString(username);
+	}
+	
+	public void updateDisplayString(String username) {
 		List<Integer> scoreList = loadList(arrayName, this.getApplicationContext());
 		String displayString = "";
 		
@@ -67,11 +56,17 @@ public class LeaderBoard extends Activity{
 		displayString += "\n";
 		displayString += "\n";
 		for (int i=0; i < scoreList.size(); i++){
-			displayString += "Top Ninja " + (i+1) + " : " + scoreList.get(i) + "\n";
+			displayString += "Top Samurai " + (i+1) + " : " + scoreList.get(i) + "\n";
 		}
 		this.scoresList = scoreList;
 		
 		myText.setText(displayString);
+	}
+	
+	public void setUsernameUpdateLeaderBoard(String username) {
+		LeaderBoard.username = username;
+		
+		updateDisplayString(username);
 	}
 	
 	public SharedPreferences getSharedPreferences(){
@@ -109,25 +104,25 @@ public class LeaderBoard extends Activity{
 	public static boolean saveRecentInt(String metricType, Context mContext, int metric){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putInt(metricType + "_recent", metric);  
+	    editor.putInt(username + "_" + metricType + "_recent", metric);  
 	    return editor.commit();
 	}
 	
 	public static int loadRecentInt(String metricType, Context mContext){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
-		return prefs.getInt(metricType + "_recent", 0);
+		return prefs.getInt(username + "_" + metricType + "_recent", 0);
 	}
 	
 	public static boolean saveTotalInt(String metricType, Context mContext, int metric){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putInt(metricType + "_total", metric);  
+	    editor.putInt(username + "_" + metricType + "_total", metric);  
 	    return editor.commit();
 	}
 	
 	public static int loadTotalInt(String metricType, Context mContext){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
-		return prefs.getInt(metricType + "_total", 0);
+		return prefs.getInt(username + "_" + metricType + "_total", 0);
 	}
 	
 	public void addListenerOnButton() {

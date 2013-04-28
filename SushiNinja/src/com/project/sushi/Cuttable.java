@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.util.Log;
-
 
 public class Cuttable {
 	
@@ -94,7 +92,7 @@ public class Cuttable {
 	}
 	
 	public boolean hasRecipe(){
-		if(recipe.size() == 0){
+		if (recipe.size() == 0){
 			return false; 
 		}
 		return true; 
@@ -162,10 +160,6 @@ public class Cuttable {
 		Iterator<Entry<String, Integer>> it = (recipe).entrySet().iterator(); 
 		while(it.hasNext()){
 			Map.Entry<String, Integer> pairs = (Map.Entry<String, Integer>)it.next(); 
-			Log.v(pairs.getKey(), "pairs key");
-			Log.v(Integer.toString(pairs.getValue()), "pairs value");
-			
-			Log.v(Integer.toString(ingredients.get(pairs.getKey())), "ing value");
 			if(ingredients.get(pairs.getKey()) < pairs.getValue()){
 				toBeSpawn.add(new Cuttable(pairs.getKey())); //adds missing recipe peices in 
 			}

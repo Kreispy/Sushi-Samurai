@@ -23,6 +23,7 @@ public class StatBoard extends Activity{
 	SharedPreferences settings;
 	static List<Integer> scoresList;
 	MusicPlayer mp = new MusicPlayer(this);
+	static String username = ""; // Default is empty string
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,15 @@ public class StatBoard extends Activity{
 		addListenerOnButton();
 		settings = getSharedPreferences(PREFERENCE_KEY, 0);
 		
-		
+		updateDisplayString(username);
+	}
+	
+	public void setUsernameUpdateStatistics(String username_input) {
+		username = username_input;
+		updateDisplayString(username);
+	}
+	
+	public void updateDisplayString(String username){
 		String displayString = "";
 		
 		myText = (TextView)findViewById(R.id.stat_board);
@@ -40,11 +49,11 @@ public class StatBoard extends Activity{
 		displayString += "\n";
 		
 		int totalSessions = 0;
-		int totalScore, totalCut, totalGenerated, totalPlaytime;
-		totalScore = totalCut = totalGenerated = totalPlaytime = 0;
+		int totalScore, totalCut, totalGenerated, totalPlaytime, totalUncuttable;
+		totalScore = totalCut = totalGenerated = totalPlaytime = totalUncuttable = 0;
 		int averageScore, averageCut, averageGenerated, averagePlaytime;
-		int recentScore, recentCut, recentGenerated, recentPlaytime;
-		recentScore = recentCut = recentGenerated = recentPlaytime = 0;
+		int recentScore, recentCut, recentGenerated, recentPlaytime, recentUncuttable;
+		recentScore = recentCut = recentGenerated = recentPlaytime = recentUncuttable = 0;
 		int averagePercent, recentPercent;
 		recentPercent = 0;
 		
@@ -53,11 +62,13 @@ public class StatBoard extends Activity{
 			
 			totalScore = LeaderBoard.loadTotalInt("TOTAL_SCORE", this.getApplicationContext());
 			totalCut = LeaderBoard.loadTotalInt("TOTAL_SUSHI_CUT", this.getApplicationContext());
+			totalUncuttable = LeaderBoard.loadTotalInt("TOTAL_UNCUTTABLE_SUSHI_CUT", this.getApplicationContext());
 			totalGenerated = LeaderBoard.loadTotalInt("TOTAL_SUSHI_GENERATED", this.getApplicationContext());
 			totalPlaytime = LeaderBoard.loadTotalInt("TOTAL_PLAYTIME", this.getApplicationContext()); // For seconds
 			
 			recentScore = LeaderBoard.loadRecentInt("RECENT_SCORE", this.getApplicationContext());
 			recentCut = LeaderBoard.loadRecentInt("RECENT_SUSHI_CUT", this.getApplicationContext());
+			recentUncuttable = LeaderBoard.loadRecentInt("RECENT_UNCUTTABLE_SUSHI_GENERATED", this.getApplicationContext()); 
 			recentGenerated = LeaderBoard.loadRecentInt("RECENT_SUSHI_GENERATED", this.getApplicationContext());
 			recentPercent = LeaderBoard.loadRecentInt("RECENT_PLAYTIME", this.getApplicationContext()); // For seconds
 			
@@ -66,8 +77,8 @@ public class StatBoard extends Activity{
 			averageGenerated = totalGenerated / totalSessions;
 			averagePlaytime = totalPlaytime / totalSessions;
 			
-			averagePercent = (totalCut * 100) / totalGenerated;
-			recentPercent = (recentCut * 100) / recentGenerated;
+			averagePercent = (totalCut * 100) / (totalGenerated  - totalUncuttable);
+			recentPercent = (recentCut * 100) / (recentGenerated - recentUncuttable);
 		}
 		catch (Exception e) { // Avoid divide by zero error
 			averageScore = 0; 
@@ -77,6 +88,7 @@ public class StatBoard extends Activity{
 			averagePercent = 0;
 		}
 		
+		displayString += "Samurai " + StatBoard.username + "'s Progress\n\n";
 		displayString += "Total Score: " + totalScore + "\n"
 		+ "Average Score: " + averageScore + "\n" 
 		+ "Recent Score: " + recentScore + "\n";
@@ -110,15 +122,15 @@ public class StatBoard extends Activity{
 	public static boolean saveList(List<Integer> list, String arrayName, Context mContext) {   
 	    SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    SharedPreferences.Editor editor = prefs.edit();  
-	    editor.putInt(arrayName +"_size", list.size());  
+	    editor.putInt(username + "_" + arrayName +"_size", list.size());  
 	    for(int i = 0;i < list.size(); i++)  
-	        editor.putInt(arrayName + "_" + i, list.get(i));  
+	        editor.putInt(username + "_"+ arrayName + "_" + i, list.get(i));  
 	    return editor.commit();  
 	}
 	
 	public List<Integer> loadList(String arrayName, Context mContext) {  
 	    SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
-	    int size = prefs.getInt(arrayName + "_size", 5);  
+	    int size = prefs.getInt(username + "_" + arrayName + "_size", 5);  
 	    List<Integer> list = new ArrayList<Integer>();  
 	    for(int i = 0; i < size; i++)  
 	        list.add(prefs.getInt(arrayName + "_" + i, 0)); // returns 0 if cannot be found
@@ -130,25 +142,25 @@ public class StatBoard extends Activity{
 	public static boolean saveRecentInt(String metricType, Context mContext, int metric){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putInt(metricType + "_recent", metric);  
+	    editor.putInt(username + "_" + metricType + "_recent", metric);  
 	    return editor.commit();
 	}
 	
 	public static int loadRecentInt(String metricType, Context mContext){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
-		return prefs.getInt(metricType + "_recent", 0);
+		return prefs.getInt(username + "_" + metricType + "_recent", 0);
 	}
 	
 	public static boolean saveTotalInt(String metricType, Context mContext, int metric){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0);  
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putInt(metricType + "_total", metric);  
+	    editor.putInt(username + "_" + metricType + "_total", metric);  
 	    return editor.commit();
 	}
 	
 	public static int loadTotalInt(String metricType, Context mContext){
 		SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_KEY, 0); 
-		return prefs.getInt(metricType + "_total", 0);
+		return prefs.getInt(username + "_" + metricType + "_total", 0);
 	}
 	
 	public void addListenerOnButton() {

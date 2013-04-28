@@ -1,17 +1,10 @@
 package com.project.sushi;
 
-//import java.util.Timer;
-//import java.util.TimerTask;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.Dialog;
 
 import com.project.sushi.R;
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
+
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Button;
@@ -22,16 +15,9 @@ import java.util.TimerTask;
 public class MainActivity extends Activity{
 
 	protected long start;
-	protected static int ti;
-	protected static int Vy;
-	protected static int Vx;
-	protected static boolean slow = false;
-	protected static boolean fast = false;
 	protected static int totalMillisecondTime = 0;
 	static int dt; 
 	Timer t; 
-	TimerTask tt;
-	
 	private static boolean isPaused; 
 		
 	@Override
@@ -42,37 +28,13 @@ public class MainActivity extends Activity{
 		isPaused = false; 
 		//Declare the timer
 		t = new Timer();
-		//Set the schedule function and rate
-		//int inc = 0; 
-		ti = 0;
-		if(slow){
-			Vy = -100;
-			dt = 50;
-		}
-		else if(fast){
-			Vy = -150;
-			dt = 30;
-		}
-		else{
-			Vy = -125;
-			dt =  40;
-		}
-		
-		Vx = 0;
-		Vy = 0; 
-		// TODO: Count the number of sessions
-		
-		
+		dt =  40;
 		CuttingBoard cb = (CuttingBoard) findViewById(R.id.pbView);
 		
 		int sessionCount = LeaderBoard.loadTotalInt("TOTAL_SESSIONS", cb.getContext());
 		LeaderBoard.saveTotalInt("TOTAL_SESSIONS", cb.getContext(), (sessionCount + 1));
 		
 		scheduleTT(); 
-		
-	
-	
-		
 	}
 	
 	protected void updateTime() {
@@ -91,7 +53,7 @@ public class MainActivity extends Activity{
 		        //Called each time when 1000 milliseconds (1 second) (the period parameter)
 		    	//We must use this function in order to change the text view text
 		    	runOnUiThread(new Runnable() {
-		    		
+		    
 		    	    @Override
 		    	    public void run() {
 		    	    	if(isPaused) return;
@@ -103,83 +65,17 @@ public class MainActivity extends Activity{
 		    	        cb.recipesBack = (ImageView) findViewById(R.id.recipesback);
 		    	        cb.viewRecipes = (Button) findViewById(R.id.viewrecipes);
 		    	        cb.setText();
-		    	        
-		    	        
-		    	        //cb.increaseY(Vy);
-		 
-		    	        //ball will either go left or right
-		    	        /*if(cb.isLeft()){
-		    	        	//cb.decreaseX(Vx);
-		    	        	invertVx(); 
-		    	        } 
-		    	        else{
-		    	        	//cb.increaseX(Vx);
-		    	        }
-		    	          */	        
-		    	        //cb.increaseX(Vx);
-		    	        /*CuttingBoard.incY -= Vx;
-		    	        CuttingBoard.incX += Vy; //+ 1*ti;
-		    	        */
-		    	        //CuttingBoard.incY = -1*(Vy*ti + 1*ti*ti); 
-		    	        //Vy += 1;
 		    	        cb.move(); 
-		    	        //ti += 5;
-		    	        //Log.v("Vy = ", Integer.toString(Vy));
-		    	        //Log.v("t = ", Integer.toString(ti));
-		    	        //Log.v(Integer.toString(CuttingBoard.incX), Integer.toString(CuttingBoard.incY));		    	        
-		    	        
 		    	        updateTime();
-		    	        
-		    	        //Log.v("Time elapsed", new Integer(totalMillisecondTime).toString());
-		    	        //Log.v("Vy = ", Integer.toString(Vy));
-		    	        //Log.v("Vx = ", Integer.toString(Vx));
 		    	        cb.invalidate();
-		    	        
-		    	        
-		    	        
 		    	    }
-		    	     
 		    	});
 		    }
-		         
 		},
 		//Set how long before to start calling the TimerTask (in milliseconds)
 		0,
 		//Set the amount of time between each execution (in milliseconds)
 		dt);
-	}
-	
-	/*
-	public void onClearButtonClick(View view){
-		CuttingBoard pbv = (CuttingBoard) findViewById(R.id.pbView);
-		pbv.clearPoints();
-		pbv.invalidate();
-	}
-	*/
-/*
- * Used for self- 
- *
-	public void onSlowVxButtonClick(View view){
-		Vx = (Vx / 2);
-	}
-	public void onFastVxButtonClick(View view){
-		Vx = (Vx * 2);
-	}
-	public void onSlowVyButtonClick(View view){
-		Vy = (Vy / 2);
-	}
-	public void onFastVyButtonClick(View view){
-		Vy = (Vy * 2);
-	}
-*/
-
-	
-	public static void setVx(int vx){
-		Vx = vx;
-	}
-	
-	public static void setVy(int vy){
-		Vy = vy;  
 	}
 	
 	public static void setIsPaused(boolean b){
@@ -199,31 +95,6 @@ public class MainActivity extends Activity{
         isPaused = true;        
         super.onPause();
     }
-	/*
-	 * 	protected void onPause(){
-		finish();
-		super.onPause();
-	}
 
-	protected void onRestart (){
-		super.onRestart();
-	    finish();
-	}
-	
-	protected void  onUserLeaveHint (){
-		super.onUserLeaveHint();
-	    finish();
-	}
-	
-	protected void onStop(){
-		super.onStop();
-	    finish();
-	}
-	
-	protected void onRestoreInstanceState(Bundle b){
-		//super.onRestoreInstanceState(b);
-	    finish();
-	}
-	*/
 
 }
