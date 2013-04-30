@@ -415,6 +415,7 @@ public class CuttingBoard extends View implements OnTouchListener{
 					enforceRecipeDecrement = true; 
 				}
 				else if(recipesMade == 1){
+					positiveRecipe = true; 
 					sushiDropped = 0; //resets for sushi dropped penalty
 				}
 				break; 
@@ -544,18 +545,19 @@ public class CuttingBoard extends View implements OnTouchListener{
 	
 	public boolean isLoss(){
 		//can't lose on first level
-		return (this.enforceRecipeDecrement == true  && recipesMade == 0 && currentLevel > 1); 
+		return ((enforceRecipeDecrement == true || positiveRecipe == true) && recipesMade == 0 && currentLevel > 1 ); 
 	}
 	
 	public void nextLevel(){
 		//sets variables for the next level
 		recipesMade = 0; 
 		sushiDropped = 0; 
-		if(offset > 18){
+		if(offset > 5){
 			offset -= 5;
 		}
 		v0factor *= 1.01; 
 		enforceRecipeDecrement = false; 
+		positiveRecipe = false; 
 		recipesMadeGoal = currentLevel*2; 
 		Iterator<Entry<String, Integer>> it = ingredients.entrySet().iterator(); 
 		while(it.hasNext()){

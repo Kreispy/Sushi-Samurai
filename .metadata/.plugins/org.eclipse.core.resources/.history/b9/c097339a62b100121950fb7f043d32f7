@@ -1,0 +1,219 @@
+package com.project.sushi;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class CuttableTest {
+	
+	private Cuttable ctb;
+	private ArrayList<Cuttable> recipes;
+	private HashMap<String, Integer> ingredients;
+	
+	@Before 
+	public void setUp(){
+		
+		ctb = new Cuttable("ricebag");
+		recipes =  new ArrayList<Cuttable>();
+		ingredients = new HashMap<String, Integer>();
+		
+		ingredients.put("shrimp", 0);
+		ingredients.put("tempura", 0);
+		ingredients.put("ricebag", 0);
+		ingredients.put("cookedrice", 0);
+		
+		ingredients.put("nori", 0);
+		ingredients.put("sashimi", 0);
+		ingredients.put("rawseaweed", 0);
+		ingredients.put("livefish", 0);
+		ingredients.put("crab", 0);
+		ingredients.put("crabmeat", 0);
+		
+		ingredients.put("avocado", 0);
+		ingredients.put("avocadocut", 0);
+		
+		HashMap<String, Integer> recipe1 = new HashMap<String, Integer>(); 
+		recipe1.put("rawseaweed",1);
+		recipe1.put("ricebag",1);
+		recipe1.put("avocado",1);
+		recipe1.put("crab",1);
+		
+		HashMap<String, Integer> recipe2 = new HashMap<String, Integer>(); 
+		recipe2.put("ricebag",1);
+		recipe2.put("livefish",1);
+		
+		HashMap<String, Integer> recipe3 = new HashMap<String, Integer>(); 
+		recipe3.put("ricebag",1);
+		recipe3.put("rawseaweed",1);
+		recipe3.put("shrimp",1);
+		
+		HashMap<String, Integer> recipe4 = new HashMap<String, Integer>(); 
+		recipe4.put("ricebag",1);
+		recipe4.put("livefish",1);
+		recipe4.put("crab",1);
+		recipe4.put("avocado",1);
+		
+
+		//add each recipe into recipes
+		recipes.add(new Cuttable("sushi", R.drawable.sushi, recipe1));
+		recipes.add(new Cuttable("sashimisushi", R.drawable.sashimisushi, recipe2));
+		recipes.add(new Cuttable("tempurasushi", R.drawable.tempurasushi, recipe3));
+		recipes.add(new Cuttable("sushi1", R.drawable.sushi1, recipe4));
+	}
+	
+	@Test
+	public void testProcessIngredient() {
+		assertTrue(ctb.processIngredient());
+		assertFalse(ctb.processIngredient());
+	}
+	
+	@Test
+	public void testCheckRecipeMade1() {
+		assertFalse(recipes.get(0).checkRecipeMade(ingredients));
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		ingredients.put("avocado", ingredients.get("avocado")+1);
+		assertFalse(recipes.get(0).checkRecipeMade(ingredients));
+		ingredients.put("crab", ingredients.get("crab")+1);
+		assertTrue(recipes.get(0).checkRecipeMade(ingredients));
+	}
+	
+	@Test
+	public void testCheckRecipeMade2() {
+		assertFalse(recipes.get(1).checkRecipeMade(ingredients));
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe2
+		
+		assertFalse(recipes.get(1).checkRecipeMade(ingredients));
+		ingredients.put("livefish", ingredients.get("livefish")+1);
+		assertTrue(recipes.get(1).checkRecipeMade(ingredients));
+	}
+
+	@Test
+	public void testCheckRecipeMade3() {
+		assertFalse(recipes.get(2).checkRecipeMade(ingredients));
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe3
+		
+		assertFalse(recipes.get(2).checkRecipeMade(ingredients));
+		ingredients.put("livefish", ingredients.get("livefish")+1); //not in recipe3
+		
+		ingredients.put("shrimp", ingredients.get("shrimp")+1);
+		assertTrue(recipes.get(2).checkRecipeMade(ingredients));
+	}
+	
+	@Test
+	public void testCheckRecipeMade4() {
+		ingredients.put("crab", ingredients.get("crab")+1);
+		
+		assertFalse(recipes.get(2).checkRecipeMade(ingredients));
+		
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe3
+		
+		assertFalse(recipes.get(2).checkRecipeMade(ingredients));
+		ingredients.put("livefish", ingredients.get("livefish")+1); //not in recipe3
+		
+		ingredients.put("shrimp", ingredients.get("shrimp")+1);
+		assertTrue(recipes.get(2).checkRecipeMade(ingredients));
+	}
+	
+	@Test 
+	public void testGetMissingIng1(){
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 4);
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 3);
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 2);
+		ingredients.put("avocado", ingredients.get("avocado")+1);
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 1);
+		ingredients.put("crab", ingredients.get("crab")+1);
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 0);
+	}
+	
+	@Test
+	public void testGetMissingIng2() {
+		assertEquals(recipes.get(1).getMissingIng(ingredients).size(), 2);
+		
+		ingredients.put("ricebag", ingredients.get("ricebag")+1); //in recipes 1, 2, 3, 4
+		
+		assertEquals(recipes.get(1).getMissingIng(ingredients).size(), 1);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe2
+		
+		assertEquals(recipes.get(0).getMissingIng(ingredients).size(), 2); // avocado is in recipe1
+		assertEquals(recipes.get(1).getMissingIng(ingredients).size(), 1); // no avocado in recipe2
+		
+		assertEquals(recipes.get(1).getMissingIng(ingredients).get(0).getName(), "livefish");
+		ingredients.put("livefish", ingredients.get("livefish")+1);
+		
+		assertEquals(recipes.get(1).getMissingIng(ingredients).size(), 0);
+	}
+	
+	@Test
+	public void testGetMissingIng3() {
+		
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 3);
+		
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 2);
+		
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 1);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe3
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 1);
+		
+		ingredients.put("livefish", ingredients.get("livefish")+1); //not in recipe3
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 1);
+		
+		ingredients.put("shrimp", ingredients.get("shrimp")+1);
+		assertEquals(recipes.get(2).getMissingIng(ingredients).size(), 0);
+	}
+	
+	@Test
+	public void testGetMissingIng4() {
+		
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 4); // everything is missing
+		
+		ingredients.put("crab", ingredients.get("crab")+1);
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 3);
+		
+		ingredients.put("rawseaweed", ingredients.get("rawseaweed")+1);
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 3);
+		
+		ingredients.put("ricebag", ingredients.get("ricebag")+1);
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 2);
+		
+		ingredients.put("avocado", ingredients.get("avocado")+1); //not in recipe4
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 1);
+		
+		ingredients.put("livefish", ingredients.get("livefish")+1); //not in recipe4
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 0);
+		
+		ingredients.put("shrimp", ingredients.get("shrimp")+1);
+		assertEquals(recipes.get(3).getMissingIng(ingredients).size(), 0);
+	}
+	
+	
+}

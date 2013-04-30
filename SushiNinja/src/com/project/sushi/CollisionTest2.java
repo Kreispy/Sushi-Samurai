@@ -42,7 +42,7 @@ public class CollisionTest2 {
 	public void testFalse() {
 		boolean result = c.checkCollisionsVectors(p1, p2, 8, 0, 2);
 		assertTrue(c.getCloseness() == Math.sqrt(12.8));
-		assertTrue(c.getScore() == 996);
+		assertTrue(c.getScore() == 0);
 		assertFalse(result);
 		
 	}
@@ -62,7 +62,7 @@ public class CollisionTest2 {
 		boolean result = c.checkCollisionsVectors(p1, p2, 80, 0, 8);
 		assertTrue(c.getCloseness() == 68.26419266350405);
 		assertFalse(result);
-		assertTrue(c.getScore() == 931);
+		assertTrue(c.getScore() == 0);
 	}
 	
 	@Test
