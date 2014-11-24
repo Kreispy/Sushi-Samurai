@@ -3,10 +3,8 @@ Sushi-Samurai
 
 Proof of concept "therapeutic application"
 
-[Technical Manual](http://i.imgur.com/SDLq5Zo.png)
+### User Manual 
+<iframe src="//pdf.yt/d/hjDDrAl_DHBVDNcZ/embed?sparse=0" style="width: 100%; height: 700px; border: 0px;" allowfullscreen></iframe>
 
-<a href="http://imgur.com/PiqzXMX"><img src="http://i.imgur.com/PiqzXMX.png" title="source: imgur.com" /></a>
-
-[User Manual](http://i.imgur.com/PiqzXMX.png)
-
-<a href="http://imgur.com/PiqzXMX"><img src="http://i.imgur.com/PiqzXMX.png" title="source: imgur.com" /></a>
+### Technical Manual
+<iframe src="//pdf.yt/d/_7V5GtPq5ll5Gepb/embed?sparse=0" style="width: 100%; height: 700px; border: 0px;" allowfullscreen></iframe>
