@@ -2,7 +2,8 @@ Sushi-Samurai
 =============
 
 Proof of concept "therapeutic application"
-Warning, image heavy.
+
+Please view the following image heavy documentation for project details. 
 
 ### User Manual 
 <a href="http://imgur.com/63T7g4Z"><img src="http://i.imgur.com/63T7g4Z.png" title="source: imgur.com" /></a>
@@ -16,6 +17,8 @@ Warning, image heavy.
 <a href="http://imgur.com/2mz1TnD"><img src="http://i.imgur.com/2mz1TnD.png" title="source: imgur.com" /></a>
 <a href="http://imgur.com/bN56Z3e"><img src="http://i.imgur.com/bN56Z3e.png" title="source: imgur.com" /></a>
 <a href="http://imgur.com/DIrtIlt"><img src="http://i.imgur.com/DIrtIlt.png" title="source: imgur.com" /></a>
+
+==============================================================================================================
 
 ### Technical Manual
 <a href="http://imgur.com/CdhDUPw"><img src="http://i.imgur.com/CdhDUPw.png" title="source: imgur.com" /></a>
